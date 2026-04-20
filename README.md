@@ -1078,15 +1078,8 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 - **When to use**:
     - Use `@PathVariable` when the value is part of the **resource path** (identifier/hierarchy), like `/users/10/orders/5`.
     - (Contrast) Use `@RequestParam` when the value is a **query parameter**, like `/users/search?name=alex`.
-- **Example**:
-  ```java
-  @GetMapping("/users/{id}")
-  public User getUser(@PathVariable int id) {
-      return userService.findById(id);
-  }
-  ```
 
-- **Common patterns**:
+- **Common patterns/examples**:
 
     **1) Explicit variable name** (useful when parameter name differs)
     ```java
@@ -1116,6 +1109,14 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
 ### 🔹 `@RequestParam`
 - **Purpose**: Binds a query parameter to a method argument.
+- **How it works**:
+    - Query params come after `?` in the URL (and are separated by `&`).
+    - Example URL: `/search?name=alex&page=1&size=10`
+    - Spring reads the query parameter value and binds it to your method parameter.
+    - Spring also does **type conversion** (e.g., `"10" → int`, `"true" → boolean`, etc.).
+- **When to use**:
+    - Use `@RequestParam` for **filters, pagination, sorting, optional flags**, etc.
+    - (Contrast) Use `@PathVariable` when the value is part of the **resource path**, like `/users/{id}`.
 - **Example**:
   ```java
   @GetMapping("/search")
@@ -1123,6 +1124,52 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
       return userService.searchByName(name);
   }
   ```
+
+- **Common patterns**:
+
+    **1) Optional parameter** (`required=false`)
+    ```java
+    @GetMapping("/users")
+    public List<User> findUsers(@RequestParam(required = false) String name) {
+          return userService.findUsers(name); // name can be null
+    }
+    ```
+
+    **2) Default value** (avoids nulls)
+    ```java
+    @GetMapping("/users")
+    public List<User> findUsers(@RequestParam(defaultValue = "") String name) {
+          return userService.findUsers(name);
+    }
+    ```
+
+    **3) Rename / alias the query param** (useful when variable name differs)
+    ```java
+    @GetMapping("/users")
+    public List<User> findUsers(@RequestParam("q") String searchText) {
+          return userService.search(searchText);
+    }
+    ```
+
+    **4) Pagination + sorting (very common in REST APIs)**
+    ```java
+    @GetMapping("/users")
+    public List<User> listUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "name") String sortBy) {
+        return userService.listUsers(page, size, sortBy);
+    }
+    ```
+
+    **5) Multi-value parameters (List)**
+    - URL: `/users?role=ADMIN&role=USER`
+    ```java
+    @GetMapping("/users")
+    public List<User> byRoles(@RequestParam List<String> role) {
+          return userService.findByRoles(role);
+    }
+    ```
 
 ---
 
