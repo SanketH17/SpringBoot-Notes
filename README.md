@@ -1129,6 +1129,7 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
     **1) Optional parameter** (`required=false`)
     ```java
+    // Example URLs: /users   OR   /users?name=alex
     @GetMapping("/users")
     public List<User> findUsers(@RequestParam(required = false) String name) {
           return userService.findUsers(name); // name can be null
@@ -1137,6 +1138,7 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
     **2) Default value** (avoids nulls)
     ```java
+    // Example URLs: /users   OR   /users?name=alex
     @GetMapping("/users")
     public List<User> findUsers(@RequestParam(defaultValue = "") String name) {
           return userService.findUsers(name);
@@ -1145,6 +1147,7 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
     **3) Rename / alias the query param** (useful when variable name differs)
     ```java
+    // Example URL: /users?q=spring
     @GetMapping("/users")
     public List<User> findUsers(@RequestParam("q") String searchText) {
           return userService.search(searchText);
@@ -1153,6 +1156,7 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
     **4) Pagination + sorting (very common in REST APIs)**
     ```java
+    // Example URL: /users?page=0&size=20&sortBy=name
     @GetMapping("/users")
     public List<User> listUsers(
             @RequestParam(defaultValue = "0") int page,
@@ -1163,8 +1167,8 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
     ```
 
     **5) Multi-value parameters (List)**
-    - URL: `/users?role=ADMIN&role=USER`
     ```java
+    // Example URL: /users?role=ADMIN&role=USER
     @GetMapping("/users")
     public List<User> byRoles(@RequestParam List<String> role) {
           return userService.findByRoles(role);
