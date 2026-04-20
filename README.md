@@ -628,7 +628,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 | `@Cacheable`             | Caches the method’s return value |
 | `@CacheEvict`            | Removes entry from cache |
 
-Absolutely! Let’s deep-dive into each Spring Boot annotation you listed with full explanation, **when to use**, and **clear examples** for each.
+Let’s deep-dive into each **Spring Boot annotations** listed above with full explanation, **when to use**, and **clear examples** for each.
 
 ---
 
@@ -1071,6 +1071,13 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
 ### 🔹 `@PathVariable`
 - **Purpose**: Binds a URI variable to a method parameter.
+- **How it works**:
+    - You define a *URI template variable* in the route like `/users/{id}`.
+    - Spring extracts that `{id}` segment from the incoming URL and assigns it to your method parameter.
+    - Spring also performs **type conversion** automatically (e.g., `"42" → int/long`, `"550e8400-e29b-41d4-a716-446655440000" → UUID`) using its conversion service.
+- **When to use**:
+    - Use `@PathVariable` when the value is part of the **resource path** (identifier/hierarchy), like `/users/10/orders/5`.
+    - (Contrast) Use `@RequestParam` when the value is a **query parameter**, like `/users/search?name=alex`.
 - **Example**:
   ```java
   @GetMapping("/users/{id}")
@@ -1078,6 +1085,32 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
       return userService.findById(id);
   }
   ```
+
+- **Common patterns**:
+
+    **1) Explicit variable name** (useful when parameter name differs)
+    ```java
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable("id") int userId) {
+        return userService.findById(userId);
+    }
+    ```
+
+    **2) Multiple path variables**
+    ```java
+    @GetMapping("/users/{userId}/orders/{orderId}")
+    public Order getOrder(@PathVariable long userId, @PathVariable long orderId) {
+        return orderService.getOrder(userId, orderId);
+    }
+    ```
+
+    **3) UUID / String identifiers**
+    ```java
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable java.util.UUID id) {
+        return userService.findById(id);
+    }
+    ```
 
 ---
 
