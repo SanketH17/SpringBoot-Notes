@@ -1221,14 +1221,43 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
 ### 🔹 `@ResponseBody`
 - **Purpose**: Sends the return value directly in the HTTP response (not as a view).
+- **In simple words**: “Return this value to the client” (don’t look for an HTML/JSP page with that name).
+- **How it works**:
+    - Without `@ResponseBody`, a `@Controller` method that returns `"home"` is treated as a **view name**.
+    - With `@ResponseBody`, Spring writes the returned value into the HTTP response body.
+    - If you return an object, Spring uses an `HttpMessageConverter` (typically Jackson) to serialize it to **JSON**.
+- **When to use**:
+    - Use it on individual methods in a `@Controller` when you want to return JSON/text.
+    - If the whole controller is REST, prefer `@RestController` (it already includes `@ResponseBody` for all methods).
 - **Example**:
   ```java
-  @ResponseBody
-  @GetMapping("/greet")
-  public String greet() {
-      return "Hello!";
-  }
+    // Example URL: GET /greet
+    @ResponseBody
+    @GetMapping("/greet")
+    public String greet() {
+        return "Hello!";
+    }
   ```
+
+- **Common pattern: returning JSON object**
+    ```java
+    // Example URL: GET /users/10
+    @ResponseBody
+    @GetMapping("/users/{id}")
+    public User getUser(@PathVariable long id) {
+        return userService.findById(id);
+    }
+    ```
+
+- **Common pattern: return status + body (`ResponseEntity`)**
+    ```java
+    // Example URL: GET /users/10
+    @ResponseBody
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserEntity(@PathVariable long id) {
+        return ResponseEntity.ok(userService.findById(id));
+    }
+    ```
 
 ---
 
