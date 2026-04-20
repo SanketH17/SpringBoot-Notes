@@ -1179,13 +1179,43 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
 
 ### 🔹 `@RequestBody`
 - **Purpose**: Binds HTTP request body to a Java object.
+- **In simple words**: Whatever JSON (or XML) you send in the request body, Spring reads it and converts it into a Java object for you.
+- **How it works**:
+    - Client sends a request body (commonly JSON) with header `Content-Type: application/json`.
+    - Spring uses an `HttpMessageConverter` (typically Jackson) to convert JSON → Java object.
+    - If the JSON fields match your Java fields (by name), they get populated automatically.
+- **When to use**:
+    - Use `@RequestBody` for **POST/PUT/PATCH** when the client sends a full object (or partial object) in the body.
+    - Avoid using it for simple filters like `?page=1` (use `@RequestParam` for that).
 - **Example**:
   ```java
-  @PostMapping("/users")
-  public void addUser(@RequestBody User user) {
-      userService.save(user);
-  }
+    // Example URL: POST /users
+    // Example JSON body:
+    // {
+    //   "name": "Alex",
+    //   "email": "alex@example.com"
+    // }
+    @PostMapping("/users")
+    public void addUser(@RequestBody User user) {
+        userService.save(user);
+    }
   ```
+
+- **Example with DTO + validation (very common)**:
+    ```java
+    // Example URL: POST /users
+    // Example JSON body:
+    // {
+    //   "name": "Alex",
+    //   "email": "alex@example.com"
+    // }
+    @PostMapping("/users")
+    public UserDto createUser(@Valid @RequestBody CreateUserRequest request) {
+        return userService.create(request);
+    }
+    ```
+
+- **Tip**: If you use `@Valid`, add `spring-boot-starter-validation` and import `jakarta.validation.Valid`.
 
 ---
 
