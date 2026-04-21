@@ -1,66 +1,268 @@
-## Index
-
-1. [What is Spring Boot?](#what-is-spring-boot)
-    1. [Key Features of Spring Boot](#key-features-of-spring-boot)
-    2. [Why Use Spring Boot?](#why-use-spring-boot)
-    3. [Example: Simple Spring Boot Application](#example-simple-spring-boot-application)
-2. [Spring Boot vs. Spring Framework: Key Differences](#spring-boot-vs-spring-framework-key-differences)
-3. [Internal Working of Spring Boot](#spring-boot-internal-working)
-4. [Spring Boot Architecture: Deep Dive](#spring-boot-architecture-deep-dive)
-5. [Annotations](#annotations)
-6. [Spring Data JPA](#1-spring-data-jpa)
-7. [Spring Security](#spring-security)
-    1. [Spring Security JWT Authentication – Full Flow](#spring-security-jwt-full-flow)
-8. [Spring Profiles](#spring-profiles)
-9. [How to Read Properties in Spring Boot](#read-properties)
-10. [Configuration Properties (Deep Dive)](#config-properties-deep-dive)
-11. [IoC Container in Spring](#ioc-container-in-spring-inversion-of-control-container)
-12. [Spring Exception Handling](#spring-exception-handling)
+# Spring Boot – Complete Notes
 
 ---
 
-# **What is Spring Boot?**  
+## Table of Contents
 
-**Spring Boot** is an open-source, Java-based framework designed to simplify the development of **standalone, production-ready Spring applications** with minimal configuration. It is built on top of the **Spring Framework** and follows the principle of **"Convention over Configuration"**, reducing boilerplate code and allowing developers to focus on business logic rather than setup and infrastructure.  
-
-
-
-## **Key Features of Spring Boot**  
-
-### **1. Auto-Configuration**  
-- Automatically configures Spring and third-party libraries based on **dependencies** in the classpath.  
-- Example: If `spring-boot-starter-data-jpa` is added, Spring Boot auto-configures **Hibernate, DataSource, and JPA**.  
-
-### **2. Standalone Applications**  
-- **No need for external servers** (like Tomcat).  
-- Comes with **embedded servers** (Tomcat, Jetty, or Undertow).  
-- Runs as a **self-contained JAR** (Java Archive) with `java -jar`.  
-
-### **3. Starter Dependencies (Starter POMs)**  
-- Simplifies dependency management (e.g., `spring-boot-starter-web` includes Spring MVC, Tomcat, and JSON support).  
-- Avoids version conflicts.  
-
-### **4. No XML Configuration**  
-- Uses **Java-based annotations** (`@SpringBootApplication`) instead of XML.  
-
-### **5. Production-Ready Features**  
-- **Spring Boot Actuator** → Provides monitoring (health checks, metrics, logs).  
-- **Externalized Configuration** → Supports `.properties` and `.yml` files.  
-- **Logging** → Built-in support for **Logback, SLF4J**.  
+- [Spring Boot – Complete Notes](#spring-boot--complete-notes)
+  - [Table of Contents](#table-of-contents)
+- [1. What is Spring Boot?](#1-what-is-spring-boot)
+  - [1.1 Key Features of Spring Boot](#11-key-features-of-spring-boot)
+    - [1. Auto-Configuration](#1-auto-configuration)
+    - [2. Standalone Applications](#2-standalone-applications)
+    - [3. Starter Dependencies (Starter POMs)](#3-starter-dependencies-starter-poms)
+    - [4. No XML Configuration](#4-no-xml-configuration)
+    - [5. Production-Ready Features](#5-production-ready-features)
+  - [1.2 Why Use Spring Boot?](#12-why-use-spring-boot)
+  - [1.3 Example: Simple Spring Boot Application](#13-example-simple-spring-boot-application)
+- [2. Spring Boot vs. Spring Framework: Key Differences](#2-spring-boot-vs-spring-framework-key-differences)
+  - [2.1 Overview](#21-overview)
+  - [2.2 Key Differences Explained](#22-key-differences-explained)
+    - [A. Configuration Approach](#a-configuration-approach)
+    - [B. Project Setup](#b-project-setup)
+    - [C. Development Speed](#c-development-speed)
+    - [D. Production Features](#d-production-features)
+  - [2.3 When to Use Which?](#23-when-to-use-which)
+    - [Choose Spring Framework When:](#choose-spring-framework-when)
+    - [Choose Spring Boot When:](#choose-spring-boot-when)
+  - [2.4 Code Comparison](#24-code-comparison)
+    - [Spring Framework (Web App)](#spring-framework-web-app)
+    - [Spring Boot (Web App)](#spring-boot-web-app)
+- [3. Internal Working of Spring Boot](#3-internal-working-of-spring-boot)
+  - [3.1 What Happens When We Start a Spring Boot Application?](#31-what-happens-when-we-start-a-spring-boot-application)
+  - [3.2 Step-by-Step Breakdown](#32-step-by-step-breakdown)
+    - [Step 1: `@SpringBootApplication` — The Core Annotation](#step-1-springbootapplication--the-core-annotation)
+    - [Step 2: `SpringApplication.run()` Method](#step-2-springapplicationrun-method)
+    - [Step 3: Auto-Configuration in Detail](#step-3-auto-configuration-in-detail)
+    - [Step 4: Bean Creation and Dependency Injection](#step-4-bean-creation-and-dependency-injection)
+    - [Step 5: Embedded Server Startup](#step-5-embedded-server-startup)
+    - [Step 6: Application Events and Listeners](#step-6-application-events-and-listeners)
+    - [Step 7: Running CommandLineRunner / ApplicationRunner](#step-7-running-commandlinerunner--applicationrunner)
+    - [Step 8: Application Ready!](#step-8-application-ready)
+  - [3.3 Complete Summary (Interview-Friendly)](#33-complete-summary-interview-friendly)
+  - [3.4 Internal Flow Diagram](#34-internal-flow-diagram)
+- [4. Spring Boot Architecture: Deep Dive](#4-spring-boot-architecture-deep-dive)
+  - [4.1 Overview of Spring Boot Architecture](#41-overview-of-spring-boot-architecture)
+  - [4.2 Architectural Layers](#42-architectural-layers)
+    - [A. Presentation Layer](#a-presentation-layer)
+    - [B. Business Layer](#b-business-layer)
+    - [C. Data Access Layer](#c-data-access-layer)
+    - [D. Integration Layer](#d-integration-layer)
+  - [4.3 Core Architectural Components](#43-core-architectural-components)
+    - [1. Spring Boot Starter](#1-spring-boot-starter)
+    - [2. Auto-Configuration](#2-auto-configuration)
+    - [3. Embedded Server](#3-embedded-server)
+    - [4. Spring Boot Actuator](#4-spring-boot-actuator)
+  - [4.4 Flow of Request Processing](#44-flow-of-request-processing)
+  - [4.5 Configuration Architecture](#45-configuration-architecture)
+  - [4.6 Spring Boot vs Traditional Architecture](#46-spring-boot-vs-traditional-architecture)
+  - [4.7 Best Practices](#47-best-practices)
+- [5. Annotations](#5-annotations)
+  - [5.1 Core Spring Annotations](#51-core-spring-annotations)
+  - [5.2 Spring Boot Annotations](#52-spring-boot-annotations)
+  - [5.3 Web and REST Annotations (Spring MVC)](#53-web-and-rest-annotations-spring-mvc)
+  - [5.4 Spring Data JPA Annotations](#54-spring-data-jpa-annotations)
+  - [5.5 Spring Security Annotations](#55-spring-security-annotations)
+  - [5.6 Testing Annotations](#56-testing-annotations)
+  - [5.7 Other Useful Annotations](#57-other-useful-annotations)
+  - [5.8 Spring Boot Annotations – Detailed Explanation](#58-spring-boot-annotations--detailed-explanation)
+    - [🔹 1. `@SpringBootApplication`](#-1-springbootapplication)
+    - [🔹 2. `@EnableAutoConfiguration`](#-2-enableautoconfiguration)
+    - [🔹 3. `@ComponentScan`](#-3-componentscan)
+    - [🔹 4. `@SpringBootTest`](#-4-springboottest)
+    - [🔹 5. `@EnableConfigurationProperties`](#-5-enableconfigurationproperties)
+    - [🔹 6. `@ConfigurationProperties`](#-6-configurationproperties)
+    - [🔹 7. `@RestControllerAdvice`](#-7-restcontrolleradvice)
+    - [🔹 8. `@SpringApplicationConfiguration` (Deprecated)](#-8-springapplicationconfiguration-deprecated)
+    - [Summary Table](#summary-table)
+  - [5.9 Core Spring Annotations – Detailed Explanation](#59-core-spring-annotations--detailed-explanation)
+    - [🔹 1. `@Configuration`](#-1-configuration)
+    - [🔹 2. `@Bean`](#-2-bean)
+    - [🔹 3. `@Component`](#-3-component)
+    - [🔹 4. `@Service`](#-4-service)
+    - [🔹 5. `@Repository`](#-5-repository)
+    - [🔹 6. `@Autowired`](#-6-autowired)
+    - [🔹 7. `@Qualifier`](#-7-qualifier)
+    - [🔹 8. `@Value`](#-8-value)
+    - [🔹 9. `@Primary`](#-9-primary)
+    - [🔹 10. `@Lazy`](#-10-lazy)
+    - [🔹 11. `@DependsOn`](#-11-dependson)
+    - [🔹 12. `@Scope`](#-12-scope)
+  - [5.10 Web and REST Annotations – Detailed Explanation](#510-web-and-rest-annotations--detailed-explanation)
+    - [🔹 `@Controller`](#-controller)
+    - [🔹 `@RestController`](#-restcontroller)
+    - [🔹 `@RequestMapping`](#-requestmapping)
+    - [🔹 `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`](#-getmapping-postmapping-putmapping-deletemapping-patchmapping)
+    - [🔹 `@PathVariable`](#-pathvariable)
+    - [🔹 `@RequestParam`](#-requestparam)
+    - [🔹 `@RequestBody`](#-requestbody)
+    - [🔹 `@ResponseBody`](#-responsebody)
+    - [🔹 `@ResponseStatus`](#-responsestatus)
+    - [🔹 `@RequestHeader`](#-requestheader)
+    - [🔹 `@CookieValue`](#-cookievalue)
+- [6. POJOs, JavaBeans, DTOs, DAOs, Value Objects, and Mappers](#6-pojos-javabeans-dtos-daos-value-objects-and-mappers)
+  - [6.1 POJO (Plain Old Java Object)](#61-pojo-plain-old-java-object)
+  - [6.2 JavaBean](#62-javabean)
+  - [6.3 DTO (Data Transfer Object)](#63-dto-data-transfer-object)
+  - [6.4 DAO (Data Access Object)](#64-dao-data-access-object)
+  - [6.5 Value Object (VO)](#65-value-object-vo)
+  - [6.6 Mapper](#66-mapper)
+  - [6.7 Summary Table](#67-summary-table)
+- [7. Spring Data JPA](#7-spring-data-jpa)
+  - [7.1 Overview](#71-overview)
+  - [7.2 Entity, Repository, CrudRepository, JpaRepository](#72-entity-repository-crudrepository-jparepository)
+    - [`@Entity`](#entity)
+    - [Repository Hierarchy](#repository-hierarchy)
+  - [7.3 JPQL and Native Queries](#73-jpql-and-native-queries)
+    - [JPQL (Java Persistence Query Language)](#jpql-java-persistence-query-language)
+    - [Native SQL](#native-sql)
+  - [7.4 Database Configuration](#74-database-configuration)
+    - [H2 (In-memory database, great for dev/test)](#h2-in-memory-database-great-for-devtest)
+    - [MySQL / PostgreSQL Example](#mysql--postgresql-example)
+  - [7.5 Spring Boot with Hibernate](#75-spring-boot-with-hibernate)
+  - [7.6 DTOs and Model Mapping](#76-dtos-and-model-mapping)
+    - [Why Use DTOs (Data Transfer Objects)?](#why-use-dtos-data-transfer-objects)
+    - [Mapping Entity to DTO (Manual)](#mapping-entity-to-dto-manual)
+    - [Using ModelMapper (Optional)](#using-modelmapper-optional)
+  - [7.7 Summary Table](#77-summary-table)
+  - [7.8 Spring Data JPA Annotations – Detailed Explanation](#78-spring-data-jpa-annotations--detailed-explanation)
+    - [🔹 `@Entity`](#-entity)
+    - [🔹 `@Id`](#-id)
+    - [🔹 `@GeneratedValue`](#-generatedvalue)
+    - [🔹 `@Table`](#-table)
+    - [🔹 `@Column`](#-column)
+    - [🔹 `@OneToOne`](#-onetoone)
+    - [🔹 `@OneToMany`](#-onetomany)
+    - [🔹 `@ManyToOne`](#-manytoone)
+    - [🔹 `@ManyToMany`](#-manytomany)
+    - [🔹 `@JoinColumn`](#-joincolumn)
+    - [🔹 `@Repository`](#-repository)
+- [8. Spring Security](#8-spring-security)
+  - [8.1 SecurityConfig.java](#81-securityconfigjava)
+    - [Annotations Used](#annotations-used)
+    - [`SecurityFilterChain` Bean](#securityfilterchain-bean)
+    - [`AuthenticationProvider` Bean](#authenticationprovider-bean)
+    - [`AuthenticationManager` Bean](#authenticationmanager-bean)
+    - [`RoleHierarchy` Bean](#rolehierarchy-bean)
+    - [Autowired Dependencies](#autowired-dependencies)
+  - [8.2 AuthenticationManager and AuthenticationProvider](#82-authenticationmanager-and-authenticationprovider)
+    - [`AuthenticationManager`](#authenticationmanager)
+    - [`AuthenticationProvider`](#authenticationprovider)
+    - [Internal Flow Between Them](#internal-flow-between-them)
+    - [Analogy](#analogy)
+    - [`SecurityConfig.java` (Improved Version)](#securityconfigjava-improved-version)
+  - [8.3 JwtFilter.java](#83-jwtfilterjava)
+    - [Summary](#summary)
+  - [8.4 JwtService.java](#84-jwtservicejava)
+    - [Summary](#summary-1)
+  - [8.5 MyUserDetailsService.java](#85-myuserdetailsservicejava)
+    - [Summary](#summary-2)
+  - [8.6 UserPrincipal.java](#86-userprincipaljava)
+    - [Summary](#summary-3)
+  - [8.7 Spring Security JWT Authentication – Full Flow](#87-spring-security-jwt-authentication--full-flow)
+    - [⚙️ 1. `SecurityConfig.java` – Main Spring Security Configuration](#️-1-securityconfigjava--main-spring-security-configuration)
+    - [📤 2. Login Request Flow (Usually POST `/api/v1/login`)](#-2-login-request-flow-usually-post-apiv1login)
+    - [🧠 3. `JwtService.java` – JWT Token Utility](#-3-jwtservicejava--jwt-token-utility)
+    - [🧹 4. `JwtFilter.java` – JWT Filter (Runs for Each Request)](#-4-jwtfilterjava--jwt-filter-runs-for-each-request)
+    - [👤 5. `MyUserDetailsService.java` – Custom User Fetcher](#-5-myuserdetailsservicejava--custom-user-fetcher)
+    - [🧾 6. `UserPrincipal.java` – Adapter Between Your User and Spring](#-6-userprincipaljava--adapter-between-your-user-and-spring)
+    - [🧑 7. `User.java` – Your Entity](#-7-userjava--your-entity)
+    - [🗃️ 8. `UserRepository.java` – DB Interaction](#️-8-userrepositoryjava--db-interaction)
+    - [🔐 9. AuthenticationProvider \& AuthenticationManager](#-9-authenticationprovider--authenticationmanager)
+    - [✅ 10. Role Hierarchy (Optional but Implemented)](#-10-role-hierarchy-optional-but-implemented)
+    - [🔄 Request Lifecycle Flow](#-request-lifecycle-flow)
+    - [Summary](#summary-4)
+- [9. Spring Profiles](#9-spring-profiles)
+  - [9.1 What is a Spring Profile?](#91-what-is-a-spring-profile)
+  - [9.2 Common Use Cases](#92-common-use-cases)
+  - [9.3 How to Define a Profile](#93-how-to-define-a-profile)
+    - [1. `application.properties/yml` files](#1-applicationpropertiesyml-files)
+    - [2. `application.yml` example](#2-applicationyml-example)
+  - [9.4 Activating a Profile](#94-activating-a-profile)
+    - [1. In application.properties](#1-in-applicationproperties)
+    - [2. As a command-line argument](#2-as-a-command-line-argument)
+    - [3. As an environment variable](#3-as-an-environment-variable)
+    - [4. In application code](#4-in-application-code)
+  - [9.5 Profile-specific Beans](#95-profile-specific-beans)
+    - [`@Profile` on Classes](#profile-on-classes)
+  - [9.6 Checking Active Profile at Runtime](#96-checking-active-profile-at-runtime)
+  - [9.7 Why Use Spring Profiles?](#97-why-use-spring-profiles)
+  - [9.8 How Spring Resolves Profiles](#98-how-spring-resolves-profiles)
+  - [9.9 Best Practices](#99-best-practices)
+- [10. How to Read Properties in Spring Boot](#10-how-to-read-properties-in-spring-boot)
+  - [10.1 Using `@Value` Annotation](#101-using-value-annotation)
+  - [10.2 Using `Environment` Interface](#102-using-environment-interface)
+  - [10.3 Using `@ConfigurationProperties`](#103-using-configurationproperties)
+  - [10.4 Summary Table](#104-summary-table)
+- [11. Configuration Properties (Deep Dive)](#11-configuration-properties-deep-dive)
+  - [11.1 `@ConfigurationProperties`](#111-configurationproperties)
+  - [11.2 `@EnableConfigurationProperties`](#112-enableconfigurationproperties)
+  - [11.3 Summary](#113-summary)
+- [12. IoC Container in Spring](#12-ioc-container-in-spring)
+  - [12.1 What is IoC (Inversion of Control)?](#121-what-is-ioc-inversion-of-control)
+  - [12.2 What is the IoC Container?](#122-what-is-the-ioc-container)
+  - [12.3 Types of IoC Containers in Spring](#123-types-of-ioc-containers-in-spring)
+  - [12.4 How It Works](#124-how-it-works)
+  - [12.5 Example: Using IoC Container](#125-example-using-ioc-container)
+    - [Component Classes](#component-classes)
+    - [Main Application](#main-application)
+  - [12.6 Benefits of IoC Container](#126-benefits-of-ioc-container)
+- [13. Spring Exception Handling](#13-spring-exception-handling)
+  - [13.1 Why Use Exception Handling in Spring?](#131-why-use-exception-handling-in-spring)
+  - [13.2 Types of Exception Handling in Spring](#132-types-of-exception-handling-in-spring)
+  - [13.3 Basic Example with `@ExceptionHandler`](#133-basic-example-with-exceptionhandler)
+  - [13.4 Global Exception Handling with `@ControllerAdvice`](#134-global-exception-handling-with-controlleradvice)
+  - [13.5 Using `@ResponseStatus` on Custom Exceptions](#135-using-responsestatus-on-custom-exceptions)
+  - [13.6 Returning Error Details as Object](#136-returning-error-details-as-object)
+  - [13.7 Best Practices](#137-best-practices)
+  - [13.8 Summary](#138-summary)
 
 ---
 
-## **Why Use Spring Boot?**  
-| **Before Spring Boot** | **With Spring Boot** |  
-|------------------------|----------------------|  
-| Manual XML/Java Config (`applicationContext.xml`) | **Auto-Configuration** (Zero config) |  
-| Manually add dependencies (risk of conflicts) | **Starter POMs** (Pre-defined dependencies) |  
-| Deploy WAR on external servers (Tomcat) | **Embedded Server** (Self-contained JAR) |  
-| Slow setup, more boilerplate code | **Faster development** (Focus on business logic) |  
+# 1. What is Spring Boot?
+
+**Spring Boot** is an open-source, Java-based framework designed to simplify the development of **standalone, production-ready Spring applications** with minimal configuration. It is built on top of the **Spring Framework** and follows the principle of **"Convention over Configuration"**, reducing boilerplate code and allowing developers to focus on business logic rather than setup and infrastructure.
 
 ---
 
-## **Example: Simple Spring Boot Application**  
+## 1.1 Key Features of Spring Boot
+
+### 1. Auto-Configuration
+- Automatically configures Spring and third-party libraries based on **dependencies** in the classpath.
+- Example: If `spring-boot-starter-data-jpa` is added, Spring Boot auto-configures **Hibernate, DataSource, and JPA**.
+
+### 2. Standalone Applications
+- **No need for external servers** (like Tomcat).
+- Comes with **embedded servers** (Tomcat, Jetty, or Undertow).
+- Runs as a **self-contained JAR** (Java Archive) with `java -jar`.
+
+### 3. Starter Dependencies (Starter POMs)
+- Simplifies dependency management (e.g., `spring-boot-starter-web` includes Spring MVC, Tomcat, and JSON support).
+- Avoids version conflicts.
+
+### 4. No XML Configuration
+- Uses **Java-based annotations** (`@SpringBootApplication`) instead of XML.
+
+### 5. Production-Ready Features
+- **Spring Boot Actuator** → Provides monitoring (health checks, metrics, logs).
+- **Externalized Configuration** → Supports `.properties` and `.yml` files.
+- **Logging** → Built-in support for **Logback, SLF4J**.
+
+---
+
+## 1.2 Why Use Spring Boot?
+
+| **Before Spring Boot** | **With Spring Boot** |
+|------------------------|----------------------|
+| Manual XML/Java Config (`applicationContext.xml`) | **Auto-Configuration** (Zero config) |
+| Manually add dependencies (risk of conflicts) | **Starter POMs** (Pre-defined dependencies) |
+| Deploy WAR on external servers (Tomcat) | **Embedded Server** (Self-contained JAR) |
+| Slow setup, more boilerplate code | **Faster development** (Focus on business logic) |
+
+---
+
+## 1.3 Example: Simple Spring Boot Application
+
 ```java
 @SpringBootApplication  // Auto-config + Component Scan
 public class MyApp {
@@ -77,14 +279,15 @@ class HelloController {
     }
 }
 ```
-- Just **one class** with `@SpringBootApplication` → Runs a full REST API!  
-- No `web.xml`, no server setup.  
+- Just **one class** with `@SpringBootApplication` → Runs a full REST API!
+- No `web.xml`, no server setup.
 
 ---
 
-# **Spring Boot vs. Spring Framework: Key Differences**
+# 2. Spring Boot vs. Spring Framework: Key Differences
 
-## **1. Overview**
+## 2.1 Overview
+
 | Feature          | Spring Framework | Spring Boot |
 |-----------------|----------------|-------------|
 | **Purpose** | Core framework for dependency injection, AOP, MVC | Opinionated extension of Spring for rapid app development |
@@ -94,70 +297,79 @@ class HelloController {
 | **Bootstrapping** | Complex setup | `@SpringBootApplication` (single annotation) |
 | **Best For** | Flexible, fine-grained control | Rapid development, microservices |
 
-## **2. Key Differences Explained**
+---
 
-### **A. Configuration Approach**
-- **Spring Framework**:  
-  - Requires explicit configuration (XML or `@Configuration` classes)  
-  - Example:  
+## 2.2 Key Differences Explained
+
+### A. Configuration Approach
+- **Spring Framework**:
+  - Requires explicit configuration (XML or `@Configuration` classes)
+  - Example:
     ```xml
     <!-- Manual bean definition in XML -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"/>
     ```
-  
-- **Spring Boot**:  
-  - **Auto-configures** beans based on classpath dependencies  
-  - Example: Just add `spring-boot-starter-data-jpa` → Auto-configures Hibernate!  
 
-### **B. Project Setup**
-- **Spring Framework**:  
-  - Manual dependency management (risk of version conflicts)  
-  - Requires separate server deployment (WAR files)  
+- **Spring Boot**:
+  - **Auto-configures** beans based on classpath dependencies
+  - Example: Just add `spring-boot-starter-data-jpa` → Auto-configures Hibernate!
 
-- **Spring Boot**:  
-  - **Starter dependencies** (e.g., `spring-boot-starter-web` bundles Spring MVC + Tomcat)  
-  - Embedded server → Runs as **self-contained JAR**  
+### B. Project Setup
+- **Spring Framework**:
+  - Manual dependency management (risk of version conflicts)
+  - Requires separate server deployment (WAR files)
 
-### **C. Development Speed**
-- **Spring Framework**:  
+- **Spring Boot**:
+  - **Starter dependencies** (e.g., `spring-boot-starter-web` bundles Spring MVC + Tomcat)
+  - Embedded server → Runs as **self-contained JAR**
+
+### C. Development Speed
+- **Spring Framework**:
   ```java
   @Configuration
   @EnableWebMvc
-  public class AppConfig implements WebMvcConfigurer { 
+  public class AppConfig implements WebMvcConfigurer {
       // Manual MVC configuration
   }
   ```
-  
-- **Spring Boot**:  
+
+- **Spring Boot**:
   ```java
   @SpringBootApplication // Single annotation replaces all boilerplate
-  public class MyApp { 
+  public class MyApp {
       public static void main(String[] args) {
-          SpringApplication.run(MyApp.class, args); 
+          SpringApplication.run(MyApp.class, args);
       }
   }
   ```
 
-### **D. Production Features**
+### D. Production Features
+
 | Feature          | Spring Framework | Spring Boot |
 |-----------------|----------------|-------------|
 | **Actuator** | Not available | Built-in (health checks, metrics) |
 | **Profiles** | Manual setup | Native support (`application-{profile}.yml`) |
 | **Logging** | Manual configuration | Auto-configured (Logback/SLF4J) |
 
-## **3. When to Use Which?**
-### **Choose Spring Framework When:**
-- You need **full control** over configurations  
-- Working with **legacy systems** requiring XML  
-- Building **highly customized** architectures  
+---
 
-### **Choose Spring Boot When:**
-- Rapid prototyping or microservices development  
-- Avoiding boilerplate configuration  
-- Need **embedded servers** or **Actuator** for monitoring  
+## 2.3 When to Use Which?
 
-## **4. Code Comparison**
-### **Spring Framework (Web App)**
+### Choose Spring Framework When:
+- You need **full control** over configurations
+- Working with **legacy systems** requiring XML
+- Building **highly customized** architectures
+
+### Choose Spring Boot When:
+- Rapid prototyping or microservices development
+- Avoiding boilerplate configuration
+- Need **embedded servers** or **Actuator** for monitoring
+
+---
+
+## 2.4 Code Comparison
+
+### Spring Framework (Web App)
 ```java
 public class MyWebInitializer implements WebApplicationInitializer {
     @Override
@@ -170,23 +382,21 @@ public class MyWebInitializer implements WebApplicationInitializer {
 }
 ```
 
-### **Spring Boot (Web App)**
+### Spring Boot (Web App)
 ```java
 @SpringBootApplication // Auto-configures EVERYTHING
 public class MyApp {
     public static void main(String[] args) {
-        SpringApplication.run(MyApp.class, args); 
+        SpringApplication.run(MyApp.class, args);
     }
 }
 ```
 
-<a id="spring-boot-internal-working"></a>
-
-## ⚙️ complete breakdown of the **internal working of Spring Boot**, from the moment you hit **Run** until the application is **ready to serve requests**.
-
 ---
 
-## ⚙️ 1️⃣ What happens when we start a Spring Boot application?
+# 3. Internal Working of Spring Boot
+
+## 3.1 What Happens When We Start a Spring Boot Application?
 
 You usually start your app with this:
 
@@ -199,63 +409,55 @@ public class MyApplication {
 }
 ```
 
-Now let’s break this into internal steps 👇
-
 ---
 
-## 🧩 **Step 1: `@SpringBootApplication` — The Core Annotation**
+## 3.2 Step-by-Step Breakdown
+
+### Step 1: `@SpringBootApplication` — The Core Annotation
 
 This is actually a **combination of three annotations**:
 
 ```java
 @SpringBootConfiguration      // Marks this class as a source of bean definitions (like @Configuration)
-@EnableAutoConfiguration      // Enables Spring Boot’s auto-configuration mechanism
+@EnableAutoConfiguration      // Enables Spring Boot's auto-configuration mechanism
 @ComponentScan                // Enables component scanning in the current package and subpackages
 ```
 
-👉 So basically, it tells Spring:
-
-> “Scan my package for components and automatically configure dependencies based on what’s on the classpath.”
+> "Scan my package for components and automatically configure dependencies based on what's on the classpath."
 
 ---
 
-## 🚀 **Step 2: `SpringApplication.run()` Method**
+### Step 2: `SpringApplication.run()` Method
 
 This method is the **starting point of the entire Spring Boot lifecycle**.
 
 Internally, it does these steps:
 
 1. **Creates a SpringApplication instance**
-
-   * Detects the application type (web, reactive, or CLI).
-   * Sets up default environment variables and banner display.
+   - Detects the application type (web, reactive, or CLI).
+   - Sets up default environment variables and banner display.
 
 2. **Prepares the ApplicationContext**
-
-   * Creates the **IoC container** (ApplicationContext).
-   * This is where all beans are created, managed, and wired together.
+   - Creates the **IoC container** (ApplicationContext).
+   - This is where all beans are created, managed, and wired together.
 
 3. **Performs Classpath Scanning**
-
-   * Finds classes annotated with `@Component`, `@Service`, `@Repository`, and `@Controller`.
-   * Registers them as beans in the ApplicationContext.
+   - Finds classes annotated with `@Component`, `@Service`, `@Repository`, and `@Controller`.
+   - Registers them as beans in the ApplicationContext.
 
 4. **Triggers Auto-Configuration**
-
-   * The `@EnableAutoConfiguration` annotation activates the **auto-configuration mechanism**.
-   * It looks at the dependencies in your classpath (via `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`) and loads corresponding configurations.
+   - The `@EnableAutoConfiguration` annotation activates the **auto-configuration mechanism**.
+   - It looks at the dependencies in your classpath (via `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`) and loads corresponding configurations.
 
    Example:
-
-   * If `spring-boot-starter-web` is in your classpath → `DispatcherServlet`, `Tomcat`, and MVC config beans are auto-configured.
-   * If `spring-boot-starter-data-jpa` is present → `EntityManager`, `DataSource`, and `JpaRepository` are auto-configured.
+   - If `spring-boot-starter-web` is in your classpath → `DispatcherServlet`, `Tomcat`, and MVC config beans are auto-configured.
+   - If `spring-boot-starter-data-jpa` is present → `EntityManager`, `DataSource`, and `JpaRepository` are auto-configured.
 
 ---
 
-## 🧠 **Step 3: Auto-Configuration in Detail**
+### Step 3: Auto-Configuration in Detail
 
-This is one of Spring Boot’s most powerful features.
-It works based on conditional annotations like:
+This is one of Spring Boot's most powerful features. It works based on conditional annotations like:
 
 ```java
 @Configuration
@@ -268,33 +470,31 @@ public class DataSourceAutoConfiguration {
 }
 ```
 
-👉 Meaning:
-
-> “If a `DataSource` class exists on the classpath and you haven’t defined your own, I’ll create one for you.”
+> "If a `DataSource` class exists on the classpath and you haven't defined your own, I'll create one for you."
 
 This is how Boot removes the need for XML or manual bean configurations.
 
 ---
 
-## 🌱 **Step 4: Bean Creation and Dependency Injection**
+### Step 4: Bean Creation and Dependency Injection
 
 Once auto-configuration and component scanning are done:
 
-* The IoC container creates all beans.
-* Dependencies are injected (`@Autowired`, constructor injection, etc.).
-* Lifecycle methods like `@PostConstruct` or `InitializingBean` are executed.
+- The IoC container creates all beans.
+- Dependencies are injected (`@Autowired`, constructor injection, etc.).
+- Lifecycle methods like `@PostConstruct` or `InitializingBean` are executed.
 
 All beans are now available in the **ApplicationContext**.
 
 ---
 
-## 🌐 **Step 5: Embedded Server Startup**
+### Step 5: Embedded Server Startup
 
-If it’s a web application:
+If it's a web application:
 
-* Spring Boot **creates and starts an embedded server** (Tomcat by default).
-* Registers the **DispatcherServlet**, which acts as the **front controller**.
-* DispatcherServlet maps all HTTP requests to appropriate controllers.
+- Spring Boot **creates and starts an embedded server** (Tomcat by default).
+- Registers the **DispatcherServlet**, which acts as the **front controller**.
+- DispatcherServlet maps all HTTP requests to appropriate controllers.
 
 So, when you hit `http://localhost:8080/hello`, the flow is:
 
@@ -306,22 +506,21 @@ No external server setup needed — everything runs inside the same process.
 
 ---
 
-## 🔄 **Step 6: Application Events and Listeners**
+### Step 6: Application Events and Listeners
 
 Spring Boot publishes several events during startup:
 
-* `ApplicationStartingEvent`
-* `ApplicationPreparedEvent`
-* `ApplicationReadyEvent`
+- `ApplicationStartingEvent`
+- `ApplicationPreparedEvent`
+- `ApplicationReadyEvent`
 
 You can listen to these using `ApplicationListener` or `@EventListener` if you want to run custom logic at specific stages.
 
 ---
 
-## ⚡ **Step 7: Running CommandLineRunner / ApplicationRunner**
+### Step 7: Running CommandLineRunner / ApplicationRunner
 
-After the context is fully loaded and the server is ready,
-Spring Boot executes all beans that implement `CommandLineRunner` or `ApplicationRunner`.
+After the context is fully loaded and the server is ready, Spring Boot executes all beans that implement `CommandLineRunner` or `ApplicationRunner`.
 
 Example:
 
@@ -337,16 +536,16 @@ public class StartupTask implements CommandLineRunner {
 
 ---
 
-## ✅ **Step 8: Application Ready!**
+### Step 8: Application Ready!
 
 At this point:
 
-* The IoC container is fully initialized.
-* Beans are created and injected.
-* Auto-configuration is complete.
-* The embedded web server is running and listening for requests.
+- The IoC container is fully initialized.
+- Beans are created and injected.
+- Auto-configuration is complete.
+- The embedded web server is running and listening for requests.
 
-You’ll see logs like:
+You'll see logs like:
 
 ```
 Tomcat started on port(s): 8080
@@ -357,20 +556,18 @@ Your Spring Boot app is now fully operational 🎉
 
 ---
 
-## 🧭 **Complete Summary (Interview-Friendly)**
+## 3.3 Complete Summary (Interview-Friendly)
 
-You can explain like this in the interview 👇
-
-> “When we run a Spring Boot application, the `@SpringBootApplication` annotation triggers component scanning and auto-configuration.
+> "When we run a Spring Boot application, the `@SpringBootApplication` annotation triggers component scanning and auto-configuration.
 > The `SpringApplication.run()` method creates an IoC container (ApplicationContext), scans for beans, and injects dependencies.
 > Then the `@EnableAutoConfiguration` mechanism looks at the classpath and automatically configures required beans like DataSource, DispatcherServlet, etc.
-> If it’s a web app, Spring Boot starts an embedded Tomcat server and registers DispatcherServlet as the front controller.
+> If it's a web app, Spring Boot starts an embedded Tomcat server and registers DispatcherServlet as the front controller.
 > Finally, the context is fully initialized, and the app is ready to handle requests.
-> That’s how Spring Boot internally sets up everything automatically without manual configuration.”
+> That's how Spring Boot internally sets up everything automatically without manual configuration."
 
 ---
 
-## 🧩 Optional — Internal Flow Diagram
+## 3.4 Internal Flow Diagram
 
 ```
 @SpringBootApplication
@@ -400,19 +597,23 @@ DispatcherServlet Initialized
 Application Ready to Handle Requests
 ```
 
-# **Spring Boot Architecture: Deep Dive**
+---
 
-## **1. Overview of Spring Boot Architecture**
+# 4. Spring Boot Architecture: Deep Dive
+
+## 4.1 Overview of Spring Boot Architecture
+
 Spring Boot follows a **layered architecture** built on top of the Spring Framework. Its key components work together to provide:
 - **Auto-configuration** (Smart defaults)
 - **Embedded server** (No external deployment)
 - **Starter dependencies** (Simplified POMs)
 - **Production-ready features** (Actuator, metrics)
 
-## **2. Architectural Layers**
-Here's how Spring Boot structures applications:
+---
 
-### **A. Presentation Layer**
+## 4.2 Architectural Layers
+
+### A. Presentation Layer
 - **Components**: `@RestController`, `@Controller`
 - **Responsibility**: Handles HTTP requests/responses
 - **Example**:
@@ -426,7 +627,7 @@ Here's how Spring Boot structures applications:
   }
   ```
 
-### **B. Business Layer**
+### B. Business Layer
 - **Components**: `@Service`, `@Component`
 - **Responsibility**: Contains business logic
 - **Example**:
@@ -435,14 +636,14 @@ Here's how Spring Boot structures applications:
   public class UserService {
       @Autowired
       private UserRepository repo;
-      
+
       public List<User> findAll() {
           return repo.findAll();
       }
   }
   ```
 
-### **C. Data Access Layer**
+### C. Data Access Layer
 - **Components**: `@Repository`, Spring Data JPA
 - **Responsibility**: Database interactions
 - **Example**:
@@ -451,13 +652,15 @@ Here's how Spring Boot structures applications:
   public interface UserRepository extends JpaRepository<User, Long> {}
   ```
 
-### **D. Integration Layer**
+### D. Integration Layer
 - Handles external systems (REST APIs, messaging queues)
 - Common annotations: `@FeignClient`, `@KafkaListener`
 
-## **3. Core Architectural Components**
+---
 
-### **1. Spring Boot Starter**
+## 4.3 Core Architectural Components
+
+### 1. Spring Boot Starter
 - **Purpose**: Simplified dependency management
 - **How it works**:
   ```xml
@@ -468,7 +671,7 @@ Here's how Spring Boot structures applications:
   ```
   - Bundles Tomcat + Spring MVC + JSON support
 
-### **2. Auto-Configuration**
+### 2. Auto-Configuration
 - **Mechanism**:
   1. Scans classpath
   2. Checks `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`
@@ -478,7 +681,7 @@ Here's how Spring Boot structures applications:
   - Hibernate
   - JPA EntityManager
 
-### **3. Embedded Server**
+### 3. Embedded Server
 - **Options**: Tomcat (default), Jetty, Undertow
 - **How it works**:
   ```java
@@ -491,7 +694,7 @@ Here's how Spring Boot structures applications:
   }
   ```
 
-### **4. Spring Boot Actuator**
+### 4. Spring Boot Actuator
 - **Production monitoring**:
   ```yaml
   management:
@@ -505,14 +708,20 @@ Here's how Spring Boot structures applications:
   - `/actuator/metrics` - Performance metrics
   - `/actuator/env` - Environment variables
 
-## **4. Flow of Request Processing**
+---
+
+## 4.4 Flow of Request Processing
+
 1. **HTTP Request** → DispatcherServlet (Auto-configured)
 2. **Routes to Controller** via `@RequestMapping`
 3. **Business Logic** processed in Service layer
 4. **Data Access** via Repository
 5. **Response** returned through Controller
 
-## **5. Configuration Architecture**
+---
+
+## 4.5 Configuration Architecture
+
 Spring Boot's **hierarchical** property loading order:
 1. `@PropertySource` annotations
 2. **application.properties** (or `.yml`)
@@ -525,7 +734,10 @@ Example property override:
 server.port=8081
 ```
 
-## **6. Spring Boot vs Traditional Architecture**
+---
+
+## 4.6 Spring Boot vs Traditional Architecture
+
 | Aspect | Traditional Spring | Spring Boot |
 |--------|-------------------|-------------|
 | **Configuration** | Manual XML/Java | Auto-configured |
@@ -533,18 +745,20 @@ server.port=8081
 | **Dependencies** | Manual version mgmt | Starter POMs |
 | **Bootstrapping** | Multiple config files | Single `@SpringBootApplication` |
 
-## **7. Best Practices**
+---
+
+## 4.7 Best Practices
+
 1. **Keep layered architecture** (Controller → Service → Repository)
 2. **Use profiles** for environment-specific configs
 3. **Leverage Actuator** for production monitoring
 4. **Externalize configuration** (avoid hardcoding)
 
-Great question! Spring and Spring Boot together offer a wide variety of **annotations** to make development faster, cleaner, and more modular. Here's a **comprehensive list** of the most commonly used annotations grouped by purpose:
-
 ---
-## **Annotations**
 
-## 🔹 **1. Core Spring Annotations**
+# 5. Annotations
+
+## 5.1 Core Spring Annotations
 
 | Annotation            | Purpose |
 |------------------------|---------|
@@ -563,12 +777,12 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **2. Spring Boot Annotations**
+## 5.2 Spring Boot Annotations
 
 | Annotation                | Purpose |
 |----------------------------|---------|
 | `@SpringBootApplication`   | Combines `@Configuration`, `@EnableAutoConfiguration`, and `@ComponentScan` |
-| `@EnableAutoConfiguration` | Enables Spring Boot’s auto-configuration feature |
+| `@EnableAutoConfiguration` | Enables Spring Boot's auto-configuration feature |
 | `@ComponentScan`           | Tells Spring to scan for annotated components in a package |
 | `@SpringBootTest`          | Used for Spring Boot integration tests |
 | `@EnableConfigurationProperties` | Binds configuration properties to Java beans |
@@ -578,7 +792,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **3. Web and REST Annotations (Spring MVC)**
+## 5.3 Web and REST Annotations (Spring MVC)
 
 | Annotation          | Purpose |
 |----------------------|---------|
@@ -600,7 +814,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **4. Spring Data JPA Annotations**
+## 5.4 Spring Data JPA Annotations
 
 | Annotation          | Purpose |
 |----------------------|---------|
@@ -615,7 +829,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **5. Spring Security Annotations**
+## 5.5 Spring Security Annotations
 
 | Annotation              | Purpose |
 |--------------------------|---------|
@@ -627,7 +841,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **6. Testing Annotations**
+## 5.6 Testing Annotations
 
 | Annotation           | Purpose |
 |-----------------------|---------|
@@ -639,7 +853,7 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 
 ---
 
-## 🔹 **7. Other Useful Annotations**
+## 5.7 Other Useful Annotations
 
 | Annotation              | Purpose |
 |--------------------------|---------|
@@ -648,26 +862,24 @@ Great question! Spring and Spring Boot together offer a wide variety of **annota
 | `@EnableAsync`           | Enables async method execution |
 | `@Async`                 | Runs a method asynchronously |
 | `@EnableCaching`         | Enables caching |
-| `@Cacheable`             | Caches the method’s return value |
+| `@Cacheable`             | Caches the method's return value |
 | `@CacheEvict`            | Removes entry from cache |
-
-Let’s deep-dive into each **Spring Boot annotations** listed above with full explanation, **when to use**, and **clear examples** for each.
 
 ---
 
-## 🔹 1. `@SpringBootApplication`
+## 5.8 Spring Boot Annotations – Detailed Explanation
 
-### ✅ What It Does:
-This is the **main annotation** used to bootstrap a Spring Boot application.  
-It combines:
+### 🔹 1. `@SpringBootApplication`
+
+**What It Does:**
+This is the **main annotation** used to bootstrap a Spring Boot application. It combines:
 - `@Configuration` — allows the class to define beans using `@Bean`
 - `@EnableAutoConfiguration` — auto-configures Spring Beans based on the classpath and properties
 - `@ComponentScan` — scans for Spring components in the current package and subpackages
 
-### 🧠 When to Use:
-Always use this on your **main application class** (entry point).
+**When to Use:** Always use this on your **main application class** (entry point).
 
-### 💡 Example:
+**Example:**
 ```java
 @SpringBootApplication
 public class MyApp {
@@ -677,19 +889,16 @@ public class MyApp {
 }
 ```
 
-This eliminates the need to write 3 separate annotations manually.
-
 ---
 
-## 🔹 2. `@EnableAutoConfiguration`
+### 🔹 2. `@EnableAutoConfiguration`
 
-### ✅ What It Does:
+**What It Does:**
 Tells Spring Boot to **automatically configure beans** based on dependencies in your project (e.g., if `spring-boot-starter-web` is in the classpath, it sets up Tomcat, Jackson, etc.).
 
-### 🧠 When to Use:
-Use it when you want **auto-configuration** but don’t want to use `@SpringBootApplication`.
+**When to Use:** Use it when you want **auto-configuration** but don't want to use `@SpringBootApplication`.
 
-### 💡 Example:
+**Example:**
 ```java
 @Configuration
 @EnableAutoConfiguration
@@ -702,15 +911,14 @@ public class MyConfig {
 
 ---
 
-## 🔹 3. `@ComponentScan`
+### 🔹 3. `@ComponentScan`
 
-### ✅ What It Does:
+**What It Does:**
 Tells Spring where to **look for components** (`@Component`, `@Service`, `@Repository`, etc.) to register as beans.
 
-### 🧠 When to Use:
-When your components are outside the current package of the main class. Customize it to specify the base packages.
+**When to Use:** When your components are outside the current package of the main class.
 
-### 💡 Example:
+**Example:**
 ```java
 @ComponentScan(basePackages = {"com.myapp.services", "com.myapp.controllers"})
 public class AppConfig { }
@@ -718,15 +926,14 @@ public class AppConfig { }
 
 ---
 
-## 🔹 4. `@SpringBootTest`
+### 🔹 4. `@SpringBootTest`
 
-### ✅ What It Does:
+**What It Does:**
 Used for **integration testing** in Spring Boot. Loads the full application context and allows you to test components as they work together.
 
-### 🧠 When to Use:
-When you want to test the full Spring context (e.g., service with repository or controller with service).
+**When to Use:** When you want to test the full Spring context.
 
-### 💡 Example:
+**Example:**
 ```java
 @SpringBootTest
 class UserServiceTest {
@@ -743,15 +950,14 @@ class UserServiceTest {
 
 ---
 
-## 🔹 5. `@EnableConfigurationProperties`
+### 🔹 5. `@EnableConfigurationProperties`
 
-### ✅ What It Does:
+**What It Does:**
 Enables support for `@ConfigurationProperties` annotated beans. Without this, Spring Boot won't map values from `application.properties`.
 
-### 🧠 When to Use:
-Use when you want to **externalize configuration** into a POJO from properties/yaml.
+**When to Use:** Use when you want to **externalize configuration** into a POJO from properties/yaml.
 
-### 💡 Example:
+**Example:**
 ```java
 @SpringBootApplication
 @EnableConfigurationProperties(AppConfig.class)
@@ -760,15 +966,14 @@ public class MyApp { }
 
 ---
 
-## 🔹 6. `@ConfigurationProperties`
+### 🔹 6. `@ConfigurationProperties`
 
-### ✅ What It Does:
+**What It Does:**
 Maps hierarchical configuration properties (from `application.properties` or `application.yml`) to a Java bean.
 
-### 🧠 When to Use:
-When you have **grouped or nested configuration** settings to bind to a class.
+**When to Use:** When you have **grouped or nested configuration** settings to bind to a class.
 
-### 💡 Example:
+**Example:**
 ```properties
 app.name=TestApp
 app.version=1.0
@@ -780,22 +985,21 @@ app.version=1.0
 public class AppConfig {
     private String name;
     private String version;
-    
+
     // Getters and Setters
 }
 ```
 
 ---
 
-## 🔹 7. `@RestControllerAdvice`
+### 🔹 7. `@RestControllerAdvice`
 
-### ✅ What It Does:
+**What It Does:**
 It's a combination of `@ControllerAdvice` and `@ResponseBody`, used for **global exception handling** in REST controllers.
 
-### 🧠 When to Use:
-Use when you want to handle exceptions from **all REST endpoints** in one place.
+**When to Use:** Use when you want to handle exceptions from **all REST endpoints** in one place.
 
-### 💡 Example:
+**Example:**
 ```java
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -809,16 +1013,14 @@ public class GlobalExceptionHandler {
 
 ---
 
-## 🔹 8. `@SpringApplicationConfiguration` (Deprecated)
+### 🔹 8. `@SpringApplicationConfiguration` (Deprecated)
 
-### ✅ What It Did:
+**What It Did:**
 Used in **older Spring Boot versions** to configure the application context for tests.
 
-### 🧠 When to Use:
-⚠️ **Deprecated** — no longer needed after Spring Boot 1.4.  
-Use `@SpringBootTest` instead.
+**When to Use:** ⚠️ **Deprecated** — no longer needed after Spring Boot 1.4. Use `@SpringBootTest` instead.
 
-### 💡 Modern Alternative:
+**Modern Alternative:**
 ```java
 @SpringBootTest
 public class MyAppTest {
@@ -828,7 +1030,7 @@ public class MyAppTest {
 
 ---
 
-### ✅ Summary Table
+### Summary Table
 
 | Annotation                  | Use Case |
 |-----------------------------|----------|
@@ -841,14 +1043,11 @@ public class MyAppTest {
 | `@RestControllerAdvice`      | Centralized REST exception handling |
 | `@SpringApplicationConfiguration` | 🛑 Deprecated, replaced by `@SpringBootTest` |
 
-
- 
- ###  `Core Spring Annotation ` 
-
 ---
 
-### 🔹 1. `@Configuration`
+## 5.9 Core Spring Annotations – Detailed Explanation
 
+### 🔹 1. `@Configuration`
 - **Purpose**: Indicates that a class contains bean definitions that should be managed by Spring's IoC container.
 - **Use Case**: When you define beans manually using `@Bean`.
 - **Example**:
@@ -862,10 +1061,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 2. `@Bean`
-
 - **Purpose**: Declares a method that returns a Spring bean to be managed by the Spring container.
 - **Use Case**: For third-party or manually configured classes that aren't annotated with `@Component`.
 - **Example**:
@@ -876,10 +1072,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 3. `@Component`
-
 - **Purpose**: A generic stereotype to register a class as a Spring-managed component.
 - **Use Case**: For custom utility classes or general-purpose components.
 - **Example**:
@@ -890,10 +1083,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 4. `@Service`
-
 - **Purpose**: Specialized version of `@Component` used for service layer classes.
 - **Use Case**: Use in your business logic layer.
 - **Example**:
@@ -904,10 +1094,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 5. `@Repository`
-
 - **Purpose**: Specialized version of `@Component` for DAO or persistence layer classes. Enables automatic exception translation.
 - **Use Case**: Classes that interact with the database.
 - **Example**:
@@ -918,10 +1105,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 6. `@Autowired`
-
 - **Purpose**: Automatically injects dependent beans by type.
 - **Use Case**: Inject services or repositories into your class.
 - **Example**:
@@ -930,10 +1114,7 @@ public class MyAppTest {
   private UserService userService;
   ```
 
----
-
 ### 🔹 7. `@Qualifier`
-
 - **Purpose**: Resolves ambiguity when multiple beans of the same type are present.
 - **Use Case**: When you have more than one bean of the same interface/class.
 - **Example**:
@@ -943,10 +1124,7 @@ public class MyAppTest {
   private UserService userService;
   ```
 
----
-
 ### 🔹 8. `@Value`
-
 - **Purpose**: Injects values from properties files or environment variables.
 - **Use Case**: Load config like URLs, tokens, or feature flags.
 - **Example**:
@@ -955,10 +1133,7 @@ public class MyAppTest {
   private String appName;
   ```
 
----
-
 ### 🔹 9. `@Primary`
-
 - **Purpose**: Marks a bean as the default when multiple candidates exist.
 - **Use Case**: Provide a default implementation.
 - **Example**:
@@ -970,10 +1145,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 10. `@Lazy`
-
 - **Purpose**: Delays bean creation until it's actually needed.
 - **Use Case**: For performance optimization or circular dependencies.
 - **Example**:
@@ -985,10 +1157,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 11. `@DependsOn`
-
 - **Purpose**: Specifies the initialization order of beans.
 - **Use Case**: If one bean must be initialized before another.
 - **Example**:
@@ -1000,10 +1169,7 @@ public class MyAppTest {
   }
   ```
 
----
-
 ### 🔹 12. `@Scope`
-
 - **Purpose**: Defines bean scope like `singleton`, `prototype`, `request`, `session`, etc.
 - **Use Case**: For stateless or stateful components.
 - **Example**:
@@ -1014,11 +1180,10 @@ public class MyAppTest {
       ...
   }
   ```
-  It seems like I can’t do more advanced data analysis right now. Please try again later.
-
-In the meantime, I can still provide you with the **detailed explanations** for each of the **Web and REST annotations** right here:
 
 ---
+
+## 5.10 Web and REST Annotations – Detailed Explanation
 
 ### 🔹 `@Controller`
 - **Purpose**: Marks the class as a Spring MVC controller that returns views (like HTML pages).
@@ -1034,8 +1199,6 @@ In the meantime, I can still provide you with the **detailed explanations** for 
   }
   ```
 
----
-
 ### 🔹 `@RestController`
 - **Purpose**: Combines `@Controller` + `@ResponseBody`. Used to build REST APIs that return data.
 - **Use**: When building APIs returning JSON or XML.
@@ -1050,8 +1213,6 @@ In the meantime, I can still provide you with the **detailed explanations** for 
   }
   ```
 
----
-
 ### 🔹 `@RequestMapping`
 - **Purpose**: Maps HTTP requests to controller classes/methods.
 - **Use**: For general mappings; can specify method types, paths, headers.
@@ -1065,8 +1226,6 @@ In the meantime, I can still provide you with the **detailed explanations** for 
       }
   }
   ```
-
----
 
 ### 🔹 `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`, `@PatchMapping`
 - **Purpose**: Shorthand for `@RequestMapping(method = ...)`
@@ -1090,56 +1249,41 @@ public void deleteUser(@PathVariable int id) { ... }
 public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> updates) { ... }
 ```
 
----
-
 ### 🔹 `@PathVariable`
 - **Purpose**: Binds a URI variable to a method parameter.
-- **How it works**:
-    - You define a *URI template variable* in the route like `/users/{id}`.
-    - Spring extracts that `{id}` segment from the incoming URL and assigns it to your method parameter.
-    - Spring also performs **type conversion** automatically (e.g., `"42" → int/long`, `"550e8400-e29b-41d4-a716-446655440000" → UUID`) using its conversion service.
-- **When to use**:
-    - Use `@PathVariable` when the value is part of the **resource path** (identifier/hierarchy), like `/users/10/orders/5`.
-    - (Contrast) Use `@RequestParam` when the value is a **query parameter**, like `/users/search?name=alex`.
+- **How it works**: You define a *URI template variable* in the route like `/users/{id}`. Spring extracts that `{id}` segment from the incoming URL and assigns it to your method parameter. Spring also performs **type conversion** automatically (e.g., `"42" → int/long`).
+- **When to use**: Use `@PathVariable` when the value is part of the **resource path** (identifier/hierarchy), like `/users/10/orders/5`.
 
-- **Common patterns/examples**:
+**Common patterns/examples**:
 
-    **1) Explicit variable name** (useful when parameter name differs)
-    ```java
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") int userId) {
-        return userService.findById(userId);
-    }
-    ```
+1) Explicit variable name (useful when parameter name differs):
+```java
+@GetMapping("/users/{id}")
+public User getUser(@PathVariable("id") int userId) {
+    return userService.findById(userId);
+}
+```
 
-    **2) Multiple path variables**
-    ```java
-    @GetMapping("/users/{userId}/orders/{orderId}")
-    public Order getOrder(@PathVariable long userId, @PathVariable long orderId) {
-        return orderService.getOrder(userId, orderId);
-    }
-    ```
+2) Multiple path variables:
+```java
+@GetMapping("/users/{userId}/orders/{orderId}")
+public Order getOrder(@PathVariable long userId, @PathVariable long orderId) {
+    return orderService.getOrder(userId, orderId);
+}
+```
 
-    **3) UUID / String identifiers**
-    ```java
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable java.util.UUID id) {
-        return userService.findById(id);
-    }
-    ```
-
----
+3) UUID / String identifiers:
+```java
+@GetMapping("/users/{id}")
+public User getUser(@PathVariable java.util.UUID id) {
+    return userService.findById(id);
+}
+```
 
 ### 🔹 `@RequestParam`
 - **Purpose**: Binds a query parameter to a method argument.
-- **How it works**:
-    - Query params come after `?` in the URL (and are separated by `&`).
-    - Example URL: `/search?name=alex&page=1&size=10`
-    - Spring reads the query parameter value and binds it to your method parameter.
-    - Spring also does **type conversion** (e.g., `"10" → int`, `"true" → boolean`, etc.).
-- **When to use**:
-    - Use `@RequestParam` for **filters, pagination, sorting, optional flags**, etc.
-    - (Contrast) Use `@PathVariable` when the value is part of the **resource path**, like `/users/{id}`.
+- **How it works**: Query params come after `?` in the URL. Spring reads the query parameter value and binds it to your method parameter.
+- **When to use**: Use `@RequestParam` for **filters, pagination, sorting, optional flags**, etc.
 - **Example**:
   ```java
   @GetMapping("/search")
@@ -1148,141 +1292,103 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
   }
   ```
 
-- **Common patterns**:
+**Common patterns**:
 
-    **1) Optional parameter** (`required=false`)
-    ```java
-    // Example URLs: /users   OR   /users?name=alex
-    @GetMapping("/users")
-    public List<User> findUsers(@RequestParam(required = false) String name) {
-          return userService.findUsers(name); // name can be null
-    }
-    ```
+1) Optional parameter (`required=false`):
+```java
+@GetMapping("/users")
+public List<User> findUsers(@RequestParam(required = false) String name) {
+    return userService.findUsers(name);
+}
+```
 
-    **2) Default value** (avoids nulls)
-    ```java
-    // Example URLs: /users   OR   /users?name=alex
-    @GetMapping("/users")
-    public List<User> findUsers(@RequestParam(defaultValue = "") String name) {
-          return userService.findUsers(name);
-    }
-    ```
+2) Default value (avoids nulls):
+```java
+@GetMapping("/users")
+public List<User> findUsers(@RequestParam(defaultValue = "") String name) {
+    return userService.findUsers(name);
+}
+```
 
-    **3) Rename / alias the query param** (useful when variable name differs)
-    ```java
-    // Example URL: /users?q=spring
-    @GetMapping("/users")
-    public List<User> findUsers(@RequestParam("q") String searchText) {
-          return userService.search(searchText);
-    }
-    ```
+3) Rename / alias the query param:
+```java
+@GetMapping("/users")
+public List<User> findUsers(@RequestParam("q") String searchText) {
+    return userService.search(searchText);
+}
+```
 
-    **4) Pagination + sorting (very common in REST APIs)**
-    ```java
-    // Example URL: /users?page=0&size=20&sortBy=name
-    @GetMapping("/users")
-    public List<User> listUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "name") String sortBy) {
-        return userService.listUsers(page, size, sortBy);
-    }
-    ```
+4) Pagination + sorting (very common in REST APIs):
+```java
+@GetMapping("/users")
+public List<User> listUsers(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size,
+        @RequestParam(defaultValue = "name") String sortBy) {
+    return userService.listUsers(page, size, sortBy);
+}
+```
 
-    **5) Multi-value parameters (List)**
-    ```java
-    // Example URL: /users?role=ADMIN&role=USER
-    @GetMapping("/users")
-    public List<User> byRoles(@RequestParam List<String> role) {
-          return userService.findByRoles(role);
-    }
-    ```
-
----
+5) Multi-value parameters (List):
+```java
+@GetMapping("/users")
+public List<User> byRoles(@RequestParam List<String> role) {
+    return userService.findByRoles(role);
+}
+```
 
 ### 🔹 `@RequestBody`
 - **Purpose**: Binds HTTP request body to a Java object.
-- **In simple words**: Whatever JSON (or XML) you send in the request body, Spring reads it and converts it into a Java object for you.
-- **How it works**:
-    - Client sends a request body (commonly JSON) with header `Content-Type: application/json`.
-    - Spring uses an `HttpMessageConverter` (typically Jackson) to convert JSON → Java object.
-    - If the JSON fields match your Java fields (by name), they get populated automatically.
-- **When to use**:
-    - Use `@RequestBody` for **POST/PUT/PATCH** when the client sends a full object (or partial object) in the body.
-    - Avoid using it for simple filters like `?page=1` (use `@RequestParam` for that).
+- **How it works**: Client sends a request body (commonly JSON) with header `Content-Type: application/json`. Spring uses an `HttpMessageConverter` (typically Jackson) to convert JSON → Java object.
+- **When to use**: Use `@RequestBody` for **POST/PUT/PATCH** when the client sends a full object in the body.
 - **Example**:
   ```java
-    // Example URL: POST /users
-    // Example JSON body:
-    // {
-    //   "name": "Alex",
-    //   "email": "alex@example.com"
-    // }
-    @PostMapping("/users")
-    public void addUser(@RequestBody User user) {
-        userService.save(user);
-    }
+  @PostMapping("/users")
+  public void addUser(@RequestBody User user) {
+      userService.save(user);
+  }
   ```
 
 - **Example with DTO + validation (very common)**:
-    ```java
-    // Example URL: POST /users
-    // Example JSON body:
-    // {
-    //   "name": "Alex",
-    //   "email": "alex@example.com"
-    // }
-    @PostMapping("/users")
-    public UserDto createUser(@Valid @RequestBody CreateUserRequest request) {
-        return userService.create(request);
-    }
-    ```
+  ```java
+  @PostMapping("/users")
+  public UserDto createUser(@Valid @RequestBody CreateUserRequest request) {
+      return userService.create(request);
+  }
+  ```
 
-- **Tip**: If you use `@Valid`, add `spring-boot-starter-validation` and import `jakarta.validation.Valid`.
-
----
+> **Tip**: If you use `@Valid`, add `spring-boot-starter-validation` and import `jakarta.validation.Valid`.
 
 ### 🔹 `@ResponseBody`
 - **Purpose**: Sends the return value directly in the HTTP response (not as a view).
-- **In simple words**: “Return this value to the client” (don’t look for an HTML/JSP page with that name).
-- **How it works**:
-    - Without `@ResponseBody`, a `@Controller` method that returns `"home"` is treated as a **view name**.
-    - With `@ResponseBody`, Spring writes the returned value into the HTTP response body.
-    - If you return an object, Spring uses an `HttpMessageConverter` (typically Jackson) to serialize it to **JSON**.
-- **When to use**:
-    - Use it on individual methods in a `@Controller` when you want to return JSON/text.
-    - If the whole controller is REST, prefer `@RestController` (it already includes `@ResponseBody` for all methods).
+- **How it works**: Without `@ResponseBody`, a `@Controller` method that returns `"home"` is treated as a **view name**. With `@ResponseBody`, Spring writes the returned value into the HTTP response body.
+- **When to use**: Use it on individual methods in a `@Controller` when you want to return JSON/text. If the whole controller is REST, prefer `@RestController`.
 - **Example**:
   ```java
-    // Example URL: GET /greet
-    @ResponseBody
-    @GetMapping("/greet")
-    public String greet() {
-        return "Hello!";
-    }
+  @ResponseBody
+  @GetMapping("/greet")
+  public String greet() {
+      return "Hello!";
+  }
   ```
 
-- **Common pattern: returning JSON object**
-    ```java
-    // Example URL: GET /users/10
-    @ResponseBody
-    @GetMapping("/users/{id}")
-    public User getUser(@PathVariable long id) {
-        return userService.findById(id);
-    }
-    ```
+- **Common pattern — returning JSON object**:
+  ```java
+  @ResponseBody
+  @GetMapping("/users/{id}")
+  public User getUser(@PathVariable long id) {
+      return userService.findById(id);
+  }
+  ```
 
-- **Common pattern: return status + body (`ResponseEntity`)**
-    ```java
-    // Example URL: GET /users/10
-    @ResponseBody
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUserEntity(@PathVariable long id) {
-        return ResponseEntity.ok(userService.findById(id));
-    }
-    ```
-
----
+- **Common pattern — return status + body (`ResponseEntity`)**:
+  ```java
+  @ResponseBody
+  @GetMapping("/users/{id}")
+  public ResponseEntity<User> getUserEntity(@PathVariable long id) {
+      return ResponseEntity.ok(userService.findById(id));
+  }
+  ```
 
 ### 🔹 `@ResponseStatus`
 - **Purpose**: Sets the HTTP status for a method.
@@ -1295,8 +1401,6 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
   }
   ```
 
----
-
 ### 🔹 `@RequestHeader`
 - **Purpose**: Binds a request header to a method parameter.
 - **Example**:
@@ -1306,8 +1410,6 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
       return "User-Agent: " + userAgent;
   }
   ```
-
----
 
 ### 🔹 `@CookieValue`
 - **Purpose**: Binds a cookie value to a method parameter.
@@ -1319,175 +1421,25 @@ public void patchUser(@PathVariable int id, @RequestBody Map<String, Object> upd
   }
   ```
 
-Here's a complete explanation of the **Spring Data JPA annotations** you listed — with use cases, purpose, and code examples:
-
 ---
 
-### 🔹 `@Entity`
+# 6. POJOs, JavaBeans, DTOs, DAOs, Value Objects, and Mappers
 
-- **Purpose**: Marks a class as a JPA entity (mapped to a database table).
-- **Use Case**: Any class you want persisted in the database.
-- **Example**:
-  ```java
-  @Entity
-  public class User {
-      @Id
-      @GeneratedValue
-      private Long id;
-      private String name;
-  }
-  ```
+## 6.1 POJO (Plain Old Java Object)
 
----
+**What is it?** A **POJO** is a simple Java class that doesn't implement any special interfaces or inherit from specific classes.
 
-### 🔹 `@Id`
-
-- **Purpose**: Specifies the primary key of an entity.
-- **Use Case**: Required for each JPA entity.
-- **Example**:
-  ```java
-  @Id
-  private Long id;
-  ```
-
----
-
-### 🔹 `@GeneratedValue`
-
-- **Purpose**: Specifies how the primary key is generated (auto, identity, sequence).
-- **Use Case**: When you want the database to generate primary keys automatically.
-- **Example**:
-  ```java
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  ```
-
----
-
-### 🔹 `@Table`
-
-- **Purpose**: Specifies the name of the table that the entity maps to.
-- **Use Case**: Use when the table name is different from the class name.
-- **Example**:
-  ```java
-  @Entity
-  @Table(name = "users")
-  public class User { ... }
-  ```
-
----
-
-### 🔹 `@Column`
-
-- **Purpose**: Specifies the details of the column in the table.
-- **Use Case**: Customize column names, nullability, length, etc.
-- **Example**:
-  ```java
-  @Column(name = "user_name", nullable = false, length = 50)
-  private String name;
-  ```
-
----
-
-### 🔹 `@OneToOne`
-
-- **Purpose**: One-to-one relationship between two entities.
-- **Use Case**: User has one profile.
-- **Example**:
-  ```java
-  @OneToOne
-  @JoinColumn(name = "profile_id")
-  private Profile profile;
-  ```
-
----
-
-### 🔹 `@OneToMany`
-
-- **Purpose**: One-to-many relationship.
-- **Use Case**: A user has many orders.
-- **Example**:
-  ```java
-  @OneToMany(mappedBy = "user")
-  private List<Order> orders;
-  ```
-
----
-
-### 🔹 `@ManyToOne`
-
-- **Purpose**: Many entities relate to one entity.
-- **Use Case**: Many orders belong to one user.
-- **Example**:
-  ```java
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
-  ```
-
----
-
-### 🔹 `@ManyToMany`
-
-- **Purpose**: Many-to-many relationship.
-- **Use Case**: A student can enroll in many courses and vice versa.
-- **Example**:
-  ```java
-  @ManyToMany
-  @JoinTable(name = "student_course",
-             joinColumns = @JoinColumn(name = "student_id"),
-             inverseJoinColumns = @JoinColumn(name = "course_id"))
-  private List<Course> courses;
-  ```
-
----
-
-### 🔹 `@JoinColumn`
-
-- **Purpose**: Specifies the foreign key column.
-- **Use Case**: Required in relationships to define how tables are linked.
-- **Example**:
-  ```java
-  @ManyToOne
-  @JoinColumn(name = "user_id")
-  private User user;
-  ```
-
----
-
-### 🔹 `@Repository`
-
-- **Purpose**: Marks a class as a DAO and enables exception translation into Spring’s DataAccessException.
-- **Use Case**: On interfaces or classes that perform DB operations.
-- **Example**:
-  ```java
-  @Repository
-  public interface UserRepository extends JpaRepository<User, Long> {
-      User findByName(String name);
-  }
-  ```
-
-Great! Let’s summarize and clearly distinguish between **JavaBeans**, **POJOs**, **DTOs**, **DAOs**, **Value Objects**, and **Mappers**, with real-world relevance and practical usage in Spring Boot applications.
-
----
-
-## 🔹 1. **POJO (Plain Old Java Object)**
-
-### ✅ What is it?
-A **POJO** is a simple Java class that doesn’t implement any special interfaces or inherit from specific classes. It’s just a plain object.
-
-### ✅ Characteristics:
+**Characteristics:**
 - No restrictions
 - No special annotations or interfaces
 - Can have any fields and methods
 
-### ✅ Example:
+**Example:**
 ```java
 public class User {
     private String name;
     private int age;
-    
+
     // Constructor, Getters, Setters
 }
 ```
@@ -1496,15 +1448,14 @@ public class User {
 
 ---
 
-## 🔹 2. **JavaBean**
+## 6.2 JavaBean
 
-### ✅ What is it?
-A **JavaBean** is a **POJO** that follows specific conventions:
+**What is it?** A **JavaBean** is a **POJO** that follows specific conventions:
 - Public no-arg constructor
 - Private properties with public getters/setters
 - Serializable
 
-### ✅ Example:
+**Example:**
 ```java
 public class Employee implements Serializable {
     private String id;
@@ -1524,12 +1475,11 @@ public class Employee implements Serializable {
 
 ---
 
-## 🔹 3. **DTO (Data Transfer Object)**
+## 6.3 DTO (Data Transfer Object)
 
-### ✅ What is it?
-A **DTO** is a Java object used to **transfer data** between layers (controller → service → client). DTOs contain only data (no business logic).
+**What is it?** A **DTO** is a Java object used to **transfer data** between layers (controller → service → client). DTOs contain only data (no business logic).
 
-### ✅ Example:
+**Example:**
 ```java
 public class UserDTO {
     private String name;
@@ -1546,12 +1496,11 @@ public class UserDTO {
 
 ---
 
-## 🔹 4. **DAO (Data Access Object)**
+## 6.4 DAO (Data Access Object)
 
-### ✅ What is it?
-A **DAO** encapsulates the logic for accessing persistent storage (e.g., database). In Spring Boot, DAO is implemented via `@Repository` interfaces.
+**What is it?** A **DAO** encapsulates the logic for accessing persistent storage (e.g., database). In Spring Boot, DAO is implemented via `@Repository` interfaces.
 
-### ✅ Example:
+**Example:**
 ```java
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -1563,17 +1512,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 ---
 
-## 🔹 5. **Value Object (VO)**
+## 6.5 Value Object (VO)
 
-### ✅ What is it?
-A **VO** represents an immutable object whose equality is based on value, not identity. If all its properties are equal, the objects are considered equal.
+**What is it?** A **VO** represents an immutable object whose equality is based on value, not identity.
 
-### ✅ Characteristics:
+**Characteristics:**
 - Immutable (fields set only in constructor)
 - Equals and hashCode are based on all fields
 - No setters
 
-### ✅ Example:
+**Example:**
 ```java
 public final class Money {
     private final BigDecimal amount;
@@ -1592,12 +1540,11 @@ public final class Money {
 
 ---
 
-## 🔹 6. **Mapper**
+## 6.6 Mapper
 
-### ✅ What is it?
-A **Mapper** is a utility to convert **Entity ↔ DTO**. It avoids code duplication and separates conversion logic.
+**What is it?** A **Mapper** is a utility to convert **Entity ↔ DTO**. It avoids code duplication and separates conversion logic.
 
-### ✅ Manual Example:
+**Manual Example:**
 ```java
 public class UserMapper {
     public static UserDTO toDTO(User user) {
@@ -1613,7 +1560,7 @@ public class UserMapper {
 }
 ```
 
-### ✅ With MapStruct:
+**With MapStruct:**
 ```java
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -1626,7 +1573,7 @@ public interface UserMapper {
 
 ---
 
-## 📌 Summary Table
+## 6.7 Summary Table
 
 | Term        | Purpose                                      | Mutable | Serializable | Example Usage                   |
 |-------------|----------------------------------------------|---------|--------------|----------------------------------|
@@ -1637,11 +1584,11 @@ public interface UserMapper {
 | VO          | Immutable value-based object                 | No      | Optional     | Money, DateRange, Coordinates   |
 | Mapper      | Converts between DTOs and Entities           | N/A     | N/A          | Model mapping                   |
 
-Great! Here’s a comprehensive and easy-to-follow breakdown of all the **Spring Data JPA** topics you mentioned — perfect for your notes:
-
 ---
 
-## **1. Spring Data JPA**
+# 7. Spring Data JPA
+
+## 7.1 Overview
 
 **Spring Data JPA** is part of the larger Spring Data family. It simplifies the implementation of data access layers by:
 - Eliminating boilerplate DAO code
@@ -1650,9 +1597,9 @@ Great! Here’s a comprehensive and easy-to-follow breakdown of all the **Spring
 
 ---
 
-## **2. Entity, Repository, CrudRepository, JpaRepository**
+## 7.2 Entity, Repository, CrudRepository, JpaRepository
 
-### ➤ `@Entity`
+### `@Entity`
 Represents a table in the database.
 
 ```java
@@ -1667,9 +1614,7 @@ public class User {
 }
 ```
 
----
-
-### ➤ Repository Hierarchy
+### Repository Hierarchy
 
 | Interface         | Description                              |
 |-------------------|------------------------------------------|
@@ -1685,9 +1630,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 ---
 
-## **3. JPQL and Native Queries**
+## 7.3 JPQL and Native Queries
 
-### ➤ JPQL (Java Persistence Query Language)
+### JPQL (Java Persistence Query Language)
 Object-oriented query language — works with entity names & fields.
 
 ```java
@@ -1695,9 +1640,7 @@ Object-oriented query language — works with entity names & fields.
 User findByEmail(String email);
 ```
 
----
-
-### ➤ Native SQL
+### Native SQL
 Direct SQL queries on the actual database tables.
 
 ```java
@@ -1707,9 +1650,9 @@ User findByEmailNative(String email);
 
 ---
 
-## **4. Database Configuration**
+## 7.4 Database Configuration
 
-### ➤ H2 (In-memory database, great for dev/test)
+### H2 (In-memory database, great for dev/test)
 
 ```properties
 spring.datasource.url=jdbc:h2:mem:testdb
@@ -1720,7 +1663,7 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 spring.h2.console.enabled=true
 ```
 
-### ➤ MySQL / PostgreSQL Example
+### MySQL / PostgreSQL Example
 
 ```properties
 # MySQL
@@ -1740,7 +1683,7 @@ spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
-## **5. Spring Boot with Hibernate**
+## 7.5 Spring Boot with Hibernate
 
 Hibernate is the default JPA implementation used in Spring Boot.
 
@@ -1753,16 +1696,15 @@ spring.jpa.properties.hibernate.format_sql=true
 ```
 
 Hibernate maps Java objects to relational DB tables and handles:
-
 - Entity lifecycle
 - Query translation (JPQL to SQL)
 - Lazy vs Eager fetching
 
 ---
 
-## **6. DTOs and Model Mapping**
+## 7.6 DTOs and Model Mapping
 
-### ➤ Why Use DTOs (Data Transfer Objects)?
+### Why Use DTOs (Data Transfer Objects)?
 - Avoid exposing full entity structure
 - Improve performance by fetching only needed data
 - Format/transform data before sending to frontend
@@ -1774,7 +1716,7 @@ public class UserDTO {
 }
 ```
 
-### ➤ Mapping Entity to DTO (Manual)
+### Mapping Entity to DTO (Manual)
 
 ```java
 UserDTO dto = new UserDTO();
@@ -1782,7 +1724,7 @@ dto.setName(user.getName());
 dto.setEmail(user.getEmail());
 ```
 
-### ➤ Using ModelMapper (Optional)
+### Using ModelMapper (Optional)
 
 ```java
 ModelMapper modelMapper = new ModelMapper();
@@ -1800,7 +1742,7 @@ Add dependency:
 
 ---
 
-## ✅ Summary Table
+## 7.7 Summary Table
 
 | Concept              | Key Role                                      |
 |----------------------|-----------------------------------------------|
@@ -1812,24 +1754,137 @@ Add dependency:
 | DTO                  | Transfers specific data to avoid entity leaks |
 | ModelMapper          | Auto-map between Entity & DTO                 |
 
-Here are the **Spring Security notes** based on your `SecurityConfig` class:
+---
+
+## 7.8 Spring Data JPA Annotations – Detailed Explanation
+
+### 🔹 `@Entity`
+- **Purpose**: Marks a class as a JPA entity (mapped to a database table).
+- **Use Case**: Any class you want persisted in the database.
+- **Example**:
+  ```java
+  @Entity
+  public class User {
+      @Id
+      @GeneratedValue
+      private Long id;
+      private String name;
+  }
+  ```
+
+### 🔹 `@Id`
+- **Purpose**: Specifies the primary key of an entity.
+- **Use Case**: Required for each JPA entity.
+- **Example**:
+  ```java
+  @Id
+  private Long id;
+  ```
+
+### 🔹 `@GeneratedValue`
+- **Purpose**: Specifies how the primary key is generated (auto, identity, sequence).
+- **Use Case**: When you want the database to generate primary keys automatically.
+- **Example**:
+  ```java
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  ```
+
+### 🔹 `@Table`
+- **Purpose**: Specifies the name of the table that the entity maps to.
+- **Use Case**: Use when the table name is different from the class name.
+- **Example**:
+  ```java
+  @Entity
+  @Table(name = "users")
+  public class User { ... }
+  ```
+
+### 🔹 `@Column`
+- **Purpose**: Specifies the details of the column in the table.
+- **Use Case**: Customize column names, nullability, length, etc.
+- **Example**:
+  ```java
+  @Column(name = "user_name", nullable = false, length = 50)
+  private String name;
+  ```
+
+### 🔹 `@OneToOne`
+- **Purpose**: One-to-one relationship between two entities.
+- **Use Case**: User has one profile.
+- **Example**:
+  ```java
+  @OneToOne
+  @JoinColumn(name = "profile_id")
+  private Profile profile;
+  ```
+
+### 🔹 `@OneToMany`
+- **Purpose**: One-to-many relationship.
+- **Use Case**: A user has many orders.
+- **Example**:
+  ```java
+  @OneToMany(mappedBy = "user")
+  private List<Order> orders;
+  ```
+
+### 🔹 `@ManyToOne`
+- **Purpose**: Many entities relate to one entity.
+- **Use Case**: Many orders belong to one user.
+- **Example**:
+  ```java
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+  ```
+
+### 🔹 `@ManyToMany`
+- **Purpose**: Many-to-many relationship.
+- **Use Case**: A student can enroll in many courses and vice versa.
+- **Example**:
+  ```java
+  @ManyToMany
+  @JoinTable(name = "student_course",
+             joinColumns = @JoinColumn(name = "student_id"),
+             inverseJoinColumns = @JoinColumn(name = "course_id"))
+  private List<Course> courses;
+  ```
+
+### 🔹 `@JoinColumn`
+- **Purpose**: Specifies the foreign key column.
+- **Use Case**: Required in relationships to define how tables are linked.
+- **Example**:
+  ```java
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+  ```
+
+### 🔹 `@Repository`
+- **Purpose**: Marks a class as a DAO and enables exception translation into Spring's DataAccessException.
+- **Use Case**: On interfaces or classes that perform DB operations.
+- **Example**:
+  ```java
+  @Repository
+  public interface UserRepository extends JpaRepository<User, Long> {
+      User findByName(String name);
+  }
+  ```
 
 ---
-<a id="spring-security"></a>
 
-## 🛡️ Spring Security
+# 8. Spring Security
 
-### `SecurityConfig.java`
+## 8.1 SecurityConfig.java
 
-### 📦 Annotations Used
+### Annotations Used
 - `@Configuration`: Marks the class as a source of bean definitions.
 - `@EnableWebSecurity`: Enables Spring Security for web security configuration.
 - `@EnableMethodSecurity`: Enables method-level security annotations like `@PreAuthorize`, `@Secured`, etc.
 - `@RequiredArgsConstructor`: Generates a constructor with required final fields (via Lombok).
 
----
-
-### 🔐 `SecurityFilterChain` Bean
+### `SecurityFilterChain` Bean
 ```java
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
@@ -1840,16 +1895,11 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
   - `/api/v1/admin/**`: **accessible to ADMIN**
   - `/api/v1/user/**`: **accessible to USER or ADMIN**
   - Any other request: **authentication required**
-- **Exception Handling**:
-  - Custom `AccessDeniedHandler` is configured
-- **Session Management**:
-  - `SessionCreationPolicy.STATELESS`: stateless session (important for JWT-based auth)
-- **JWT Filter Added**:
-  - `jwtFilter` is added **before** `UsernamePasswordAuthenticationFilter`
+- **Exception Handling**: Custom `AccessDeniedHandler` is configured
+- **Session Management**: `SessionCreationPolicy.STATELESS`: stateless session (important for JWT-based auth)
+- **JWT Filter Added**: `jwtFilter` is added **before** `UsernamePasswordAuthenticationFilter`
 
----
-
-### 🔐 `AuthenticationProvider` Bean
+### `AuthenticationProvider` Bean
 ```java
 @Bean
 public AuthenticationProvider authenticationProvider()
@@ -1859,18 +1909,14 @@ public AuthenticationProvider authenticationProvider()
 - Uses `BCryptPasswordEncoder` to encode passwords.
 - Adds `SimpleAuthorityMapper` to **normalize roles** (like adding `ROLE_` prefix).
 
----
-
-### 🔐 `AuthenticationManager` Bean
+### `AuthenticationManager` Bean
 ```java
 @Bean
 public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
 ```
 - Returns the `AuthenticationManager` built from Spring's auto-configured `AuthenticationConfiguration`.
 
----
-
-### 🏷️ `RoleHierarchy` Bean
+### `RoleHierarchy` Bean
 ```java
 @Bean
 public RoleHierarchyImpl roleHierarchy()
@@ -1878,35 +1924,27 @@ public RoleHierarchyImpl roleHierarchy()
 - Defines role inheritance:
   - `ROLE_ADMIN > ROLE_USER`: Users with `ADMIN` automatically get `USER` permissions.
 
----
-
-### 🧩 Autowired Dependencies
+### Autowired Dependencies
 - `JwtFilter`: Custom filter that validates JWT token.
 - `CustomAccessDeniedHandler`: Custom handler when access is denied.
 - `MyUserDetailsService`: Loads user-specific data for authentication.
 
 ---
-Here's a **clear and detailed breakdown** of both `AuthenticationManager` and `AuthenticationProvider` in Spring Security:
 
----
+## 8.2 AuthenticationManager and AuthenticationProvider
 
-## 🔐 `AuthenticationManager`
+### `AuthenticationManager`
 
-### ✅ What it is:
-- The **main interface responsible for user authentication** in Spring Security.
-- It receives an `Authentication` object and returns a fully authenticated `Authentication` object if the credentials are valid.
+**What it is:** The **main interface responsible for user authentication** in Spring Security. It receives an `Authentication` object and returns a fully authenticated `Authentication` object if the credentials are valid.
 
-### ✅ Purpose:
-- To **coordinate** the authentication process.
-- Delegates the actual verification work to one or more `AuthenticationProvider`s.
+**Purpose:** To **coordinate** the authentication process. Delegates the actual verification work to one or more `AuthenticationProvider`s.
 
-### ✅ Key Method:
+**Key Method:**
 ```java
 Authentication authenticate(Authentication authentication) throws AuthenticationException;
 ```
 
-### ✅ Example Use:
-In your login controller:
+**Example Use:** In your login controller:
 ```java
 Authentication auth = authenticationManager.authenticate(
     new UsernamePasswordAuthenticationToken(username, password)
@@ -1915,24 +1953,17 @@ Authentication auth = authenticationManager.authenticate(
 
 ---
 
-## 🔌 `AuthenticationProvider`
+### `AuthenticationProvider`
 
-### ✅ What it is:
-- A **strategy interface** used by `AuthenticationManager` to **verify user credentials**.
-- Contains the actual logic to validate the credentials and load user data.
+**What it is:** A **strategy interface** used by `AuthenticationManager` to **verify user credentials**. Contains the actual logic to validate the credentials and load user data.
 
-### ✅ Purpose:
-- To perform specific **authentication mechanisms** (e.g., username/password, OTP, etc.).
-- You can register **multiple providers** (e.g., for different login types).
+**Purpose:** To perform specific **authentication mechanisms** (e.g., username/password, OTP, etc.). You can register **multiple providers** for different login types.
 
-### ✅ Common Implementation:
-```java
-DaoAuthenticationProvider
-```
+**Common Implementation:** `DaoAuthenticationProvider`
 - Uses a `UserDetailsService` to load the user.
 - Uses a `PasswordEncoder` to check the password.
 
-### ✅ Key Methods:
+**Key Methods:**
 ```java
 Authentication authenticate(Authentication authentication) throws AuthenticationException;
 boolean supports(Class<?> authentication);
@@ -1940,7 +1971,7 @@ boolean supports(Class<?> authentication);
 
 ---
 
-## 🔄 Internal Flow Between Them
+### Internal Flow Between Them
 
 1. The login request reaches the controller.
 2. You call `authenticationManager.authenticate(...)`.
@@ -1953,14 +1984,15 @@ boolean supports(Class<?> authentication);
 
 ---
 
-## 🔧 Analogy
+### Analogy
 
 - **AuthenticationManager** = a **gatekeeper** that checks all keys.
 - **AuthenticationProvider** = a **key checker** that verifies if a particular key (credential) is valid.
 
+---
 
+### `SecurityConfig.java` (Improved Version)
 
-### ✅ `SecurityConfig.java` (Improved Version)
 ```java
 package com.rabbani.spring_security.config;
 
@@ -1999,7 +2031,7 @@ public class SecurityConfig {
      * - Disables CSRF for APIs.
      * - Configures public and protected endpoints.
      * - Uses stateless session for JWT.
-     * - Adds custom JWT filter before Spring’s default auth filter.
+     * - Adds custom JWT filter before Spring's default auth filter.
      */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -2055,8 +2087,9 @@ public class SecurityConfig {
 }
 ```
 
+---
 
-### ✅ `JwtFilter.java` (With Multi-Line Comments)
+## 8.3 JwtFilter.java
 
 ```java
 package com.rabbani.spring_security.filter;
@@ -2149,18 +2182,16 @@ public class JwtFilter extends OncePerRequestFilter {
 }
 ```
 
----
-
-### ✅ Summary (In Short)
-
+### Summary
 - **Purpose**: Authenticate user requests by validating JWT tokens.
 - **Runs Once**: Uses `OncePerRequestFilter` to ensure it's executed once per request.
 - **Authorization Header**: Looks for `Bearer <token>` format.
 - **Validation**: Extracts username, loads user from DB, validates token, and sets authentication.
 - **Integration**: Registered in the security config before `UsernamePasswordAuthenticationFilter`.
 
+---
 
-### ✅ `JwtService.java` (With Multi-Line Comments)
+## 8.4 JwtService.java
 
 ```java
 package com.rabbani.spring_security.service;
@@ -2256,22 +2287,20 @@ public class JwtService {
 }
 ```
 
----
-
-### ✅ Summary
+### Summary
 
 | Function                | Description                                                                 |
 |-------------------------|-----------------------------------------------------------------------------|
-| `generateToken()`       | Creates a JWT token with a 1-hour expiry and signs it with HS256 algorithm.|
-| `validateToken()`       | Confirms the token is valid (matches user and not expired).                |
-| `extractUsername()`     | Gets the subject (username) from the token.                                |
-| `extractClaim()`        | Generic method to extract any field from token claims.                     |
-| `extractAllClaims()`    | Parses the token and returns all its claims.                               |
-| `isTokenExpired()`      | Checks if the token's expiry time is before now.                           |
+| `generateToken()`       | Creates a JWT token with a 1-hour expiry and signs it with HS256 algorithm. |
+| `validateToken()`       | Confirms the token is valid (matches user and not expired).                 |
+| `extractUsername()`     | Gets the subject (username) from the token.                                 |
+| `extractClaim()`        | Generic method to extract any field from token claims.                      |
+| `extractAllClaims()`    | Parses the token and returns all its claims.                                |
+| `isTokenExpired()`      | Checks if the token's expiry time is before now.                            |
 
 ---
 
-### ✅ `MyUserDetailsService.java` (With Multi-line Comments)
+## 8.5 MyUserDetailsService.java
 
 ```java
 package com.rabbani.spring_security.service;
@@ -2313,9 +2342,7 @@ public class MyUserDetailsService implements UserDetailsService {
 }
 ```
 
----
-
-### ✅ Summary
+### Summary
 
 | Element                       | Purpose                                                                 |
 |------------------------------|-------------------------------------------------------------------------|
@@ -2325,11 +2352,9 @@ public class MyUserDetailsService implements UserDetailsService {
 | `UserPrincipal`              | Custom class implementing `UserDetails` to wrap your domain `User`.     |
 | `@Service`                   | Marks this class as a Spring bean to be managed by Spring container.    |
 
-    
-
 ---
 
-### ✅ `UserPrincipal.java` (With Multi-line Comments)
+## 8.6 UserPrincipal.java
 
 ```java
 package com.rabbani.spring_security.service;
@@ -2384,11 +2409,6 @@ public class UserPrincipal implements UserDetails {
         return user.getUsername();
     }
 
-    /*
-     * The following four methods are used to determine the status of the user account.
-     * Returning true means the account is valid and active.
-     */
-
     @Override
     public boolean isAccountNonExpired() {
         return true;  // Account is not expired
@@ -2411,9 +2431,7 @@ public class UserPrincipal implements UserDetails {
 }
 ```
 
----
-
-### ✅ Summary
+### Summary
 
 | Method                          | Purpose                                                                 |
 |----------------------------------|-------------------------------------------------------------------------|
@@ -2424,16 +2442,13 @@ public class UserPrincipal implements UserDetails {
 | `isCredentialsNonExpired()`     | Always `true`; can be extended for password aging policies.            |
 | `isEnabled()`                   | Always `true`; override for soft-delete or deactivation support.       |
 
-
-<a id="spring-security-jwt-full-flow"></a>
-
-## 🔁 **Spring Security JWT Authentication – Full Flow**
-
 ---
+
+## 8.7 Spring Security JWT Authentication – Full Flow
 
 ### ⚙️ 1. `SecurityConfig.java` – Main Spring Security Configuration
 
-**Purpose:**  
+**Purpose:**
 - Disables CSRF (for APIs)
 - Configures endpoints access (public, admin-only, etc.)
 - Adds `JwtFilter` before the default Spring Security filter
@@ -2447,8 +2462,7 @@ public class UserPrincipal implements UserDetails {
 
 ---
 
-### 📤 2. **Login Request Flow**  
-(Usually POST `/api/v1/login` endpoint)
+### 📤 2. Login Request Flow (Usually POST `/api/v1/login`)
 
 1. The user sends their `username` and `password`.
 2. You authenticate the credentials using the `AuthenticationManager`.
@@ -2459,14 +2473,13 @@ public class UserPrincipal implements UserDetails {
 
 ### 🧠 3. `JwtService.java` – JWT Token Utility
 
-**Purpose:**  
-Handles all JWT operations:
+**Purpose:** Handles all JWT operations:
 - **Generate Token** (`generateToken`)
 - **Extract Username** from token (`extractUsername`)
 - **Validate Token** (`validateToken`)
 - **Parse Claims** (token body)
 
-**Uses:**  
+**Uses:**
 - `io.jsonwebtoken` (JJWT library)
 - A secret signing key to sign and verify tokens.
 
@@ -2474,8 +2487,7 @@ Handles all JWT operations:
 
 ### 🧹 4. `JwtFilter.java` – JWT Filter (Runs for Each Request)
 
-**Purpose:**  
-Intercepts every HTTP request and:
+**Purpose:** Intercepts every HTTP request and:
 1. Extracts the JWT token from the `Authorization` header.
 2. Validates the token.
 3. Loads the user using `MyUserDetailsService`.
@@ -2487,8 +2499,7 @@ Intercepts every HTTP request and:
 
 ### 👤 5. `MyUserDetailsService.java` – Custom User Fetcher
 
-**Purpose:**  
-Implements `UserDetailsService`, the core interface used by Spring to fetch user details.
+**Purpose:** Implements `UserDetailsService`, the core interface used by Spring to fetch user details.
 
 **How it works:**
 - Fetches user from the database using `UserRepository`.
@@ -2498,8 +2509,7 @@ Implements `UserDetailsService`, the core interface used by Spring to fetch user
 
 ### 🧾 6. `UserPrincipal.java` – Adapter Between Your User and Spring
 
-**Purpose:**  
-Spring Security needs a class that implements `UserDetails`.
+**Purpose:** Spring Security needs a class that implements `UserDetails`.
 
 **Role:**
 - Exposes user's `username`, `password`, and `roles`
@@ -2509,7 +2519,7 @@ Spring Security needs a class that implements `UserDetails`.
 
 ### 🧑 7. `User.java` – Your Entity
 
-**Not shown**, but likely a JPA entity with fields:
+Not shown, but likely a JPA entity with fields:
 ```java
 private String username;
 private String password;
@@ -2547,7 +2557,7 @@ This means any user with `ROLE_ADMIN` also has all permissions of `ROLE_USER`.
 
 ---
 
-## 🔄 Request Lifecycle Flow
+### 🔄 Request Lifecycle Flow
 
 ```
 [Login Request] ➝ Controller ➝ AuthenticationManager ➝ MyUserDetailsService ➝ DB
@@ -2559,7 +2569,7 @@ This means any user with `ROLE_ADMIN` also has all permissions of `ROLE_USER`.
 
 ---
 
-## 📝 Summary
+### Summary
 
 | Component               | Purpose                                                |
 |------------------------|--------------------------------------------------------|
@@ -2567,38 +2577,32 @@ This means any user with `ROLE_ADMIN` also has all permissions of `ROLE_USER`.
 | `JwtFilter`             | Validates token on every request                       |
 | `JwtService`            | Generates and validates JWT                            |
 | `MyUserDetailsService`  | Loads user from DB                                     |
-| `UserPrincipal`         | Adapts your `User` to Spring's `UserDetails`          |
-| `AuthenticationManager` | Authenticates user using the provider                 |
+| `UserPrincipal`         | Adapts your `User` to Spring's `UserDetails`           |
+| `AuthenticationManager` | Authenticates user using the provider                  |
 | `DaoAuthenticationProvider` | Validates credentials and loads user from service  |
-| `RoleHierarchyImpl`     | Allows role inheritance (ADMIN > USER)                |
+| `RoleHierarchyImpl`     | Allows role inheritance (ADMIN > USER)                 |
 
 ---
 
-## Spring Profiles
+# 9. Spring Profiles
 
-In **Spring Boot**, **profiles** are a way to segregate parts of your application configuration and make it only available in certain environments (e.g., development, testing, production).
+## 9.1 What is a Spring Profile?
 
----
-
-### 🔹 What is a Spring Profile?
-
-A **profile** in Spring Boot allows you to define different configurations for different environments.
-
-You can annotate beans or specify configurations in property files that should only be active when a specific profile is selected.
+A **profile** in Spring Boot allows you to define different configurations for different environments. You can annotate beans or specify configurations in property files that should only be active when a specific profile is selected.
 
 ---
 
-### 🔹 Common Use Cases
+## 9.2 Common Use Cases
 
-* Use different databases in **dev**, **test**, and **prod**
-* Change logging levels per environment
-* Enable/disable features conditionally
+- Use different databases in **dev**, **test**, and **prod**
+- Change logging levels per environment
+- Enable/disable features conditionally
 
 ---
 
-### 🔹 How to Define a Profile
+## 9.3 How to Define a Profile
 
-#### 1. **application.properties/yml** files
+### 1. `application.properties/yml` files
 
 Spring Boot will load these based on the active profile.
 
@@ -2612,7 +2616,7 @@ server.port=80
 spring.datasource.url=jdbc:mysql://prod-db-server/db
 ```
 
-#### 2. **application.yml** example
+### 2. `application.yml` example
 
 ```yaml
 spring:
@@ -2640,27 +2644,27 @@ spring:
 
 ---
 
-### 🔹 Activating a Profile
+## 9.4 Activating a Profile
 
-#### 1. **In application.properties**
+### 1. In application.properties
 
 ```properties
 spring.profiles.active=dev
 ```
 
-#### 2. **As a command-line argument**
+### 2. As a command-line argument
 
 ```bash
 java -jar myapp.jar --spring.profiles.active=prod
 ```
 
-#### 3. **As an environment variable**
+### 3. As an environment variable
 
 ```bash
 SPRING_PROFILES_ACTIVE=prod
 ```
 
-#### 4. **In application code**
+### 4. In application code
 
 ```java
 @Profile("dev")
@@ -2672,7 +2676,7 @@ public DataSource devDataSource() {
 
 ---
 
-### 🔹 Profile-specific Beans
+## 9.5 Profile-specific Beans
 
 ```java
 @Configuration
@@ -2692,9 +2696,19 @@ public class AppConfig {
 }
 ```
 
+### `@Profile` on Classes
+
+```java
+@Profile("prod")
+@Configuration
+public class ProdConfiguration {
+    // Beans for production
+}
+```
+
 ---
 
-### 🔹 Checking Active Profile at Runtime
+## 9.6 Checking Active Profile at Runtime
 
 ```java
 @Autowired
@@ -2705,7 +2719,9 @@ public void printActiveProfiles() {
 }
 ```
 
-### 🔹 **Why Use Spring Profiles?**
+---
+
+## 9.7 Why Use Spring Profiles?
 
 In real-world applications, different environments need different configurations:
 
@@ -2719,86 +2735,11 @@ Using profiles, you can easily **switch between environments** without changing 
 
 ---
 
-### 🔹 **How to Define and Use Spring Profiles**
+## 9.8 How Spring Resolves Profiles
 
-#### 1. **Define Profiles in Configuration Files**
-
-Spring allows separate `application-{profile}.properties` or `.yml` files for each profile:
-
-```properties
-# application-dev.properties
-spring.datasource.url=jdbc:h2:mem:devdb
-spring.jpa.show-sql=true
-```
-
-```properties
-# application-prod.properties
-spring.datasource.url=jdbc:mysql://prod-db-url/mydb
-spring.jpa.show-sql=false
-```
-
----
-
-#### 2. **Activate a Profile**
-
-✅ You can activate a profile in several ways:
-
-* **application.properties**:
-
-  ```properties
-  spring.profiles.active=dev
-  ```
-
-* **Command Line**:
-
-  ```bash
-  java -jar myapp.jar --spring.profiles.active=prod
-  ```
-
-* **Environment Variable**:
-
-  ```bash
-  SPRING_PROFILES_ACTIVE=prod
-  ```
-
----
-
-#### 3. **Profile-Specific Beans**
-
-You can annotate beans or configuration classes to load only under certain profiles:
-
-```java
-@Profile("dev")
-@Bean
-public DataSource h2DataSource() {
-    return new EmbeddedDatabaseBuilder()
-        .setType(EmbeddedDatabaseType.H2)
-        .build();
-}
-```
-
-This bean will only be created if the `dev` profile is active.
-
----
-
-#### 4. **@Profile on Classes**
-
-```java
-@Profile("prod")
-@Configuration
-public class ProdConfiguration {
-    // Beans for production
-}
-```
-
----
-
-### 🔹 How Spring Resolves Profiles
-
-* First, `application.properties` is read.
-* Then, `application-{profile}.properties` overrides it if `spring.profiles.active` is set.
-* Order of resolution:
-
+- First, `application.properties` is read.
+- Then, `application-{profile}.properties` overrides it if `spring.profiles.active` is set.
+- Order of resolution:
   1. `application.properties`
   2. `application-{profile}.properties`
   3. Command-line arguments
@@ -2806,17 +2747,13 @@ public class ProdConfiguration {
 
 ---
 
-### 🔹 Best Practices
+## 9.9 Best Practices
 
-* Use **`default` profile** for fallback configuration.
-* Avoid hardcoding environment-specific values in code.
-* Keep secrets (like DB passwords) in secure configuration management systems, not in `application-*.properties`.
+- Use **`default` profile** for fallback configuration.
+- Avoid hardcoding environment-specific values in code.
+- Keep secrets (like DB passwords) in secure configuration management systems, not in `application-*.properties`.
 
----
-
-### 🔹 Real-world Use Case Example
-
-Imagine your Spring Boot app connects to different databases based on the environment. Instead of using `if` conditions, just define:
+**Real-world Use Case Example:**
 
 ```yaml
 # application-dev.yml
@@ -2832,38 +2769,33 @@ spring:
     url: jdbc:mysql://prod-db/mydb
 ```
 
-And switch environments with:
+Switch environments with:
 
 ```bash
 --spring.profiles.active=dev
 ```
 
 ---
-Here's a clean and professional explanation of how to **read properties in Spring Boot applications**, covering all three main approaches, including pros, use-cases, and examples:
 
----
-
-<a id="read-properties"></a>
-
-## 🔧 **How to Read Properties in Spring Boot**
+# 10. How to Read Properties in Spring Boot
 
 Spring Boot allows reading values from property files (`application.properties` or `application.yml`) in three primary ways:
 
 ---
 
-### 1️⃣ **Using `@Value` Annotation**
+## 10.1 Using `@Value` Annotation
+
 This is the most straightforward way to inject a **single property** value directly into a field.
 
-#### ✅ Use Case:
-Injecting individual configuration values like strings, integers, or booleans.
+**Use Case:** Injecting individual configuration values like strings, integers, or booleans.
 
-#### 🧠 Syntax:
+**Syntax:**
 ```java
 @Value("${property.name}")
 private String propertyValue;
 ```
 
-#### 🧪 Example:
+**Example:**
 ```properties
 app.title=Spring Boot Application
 ```
@@ -2881,19 +2813,17 @@ public class MyComponent {
 }
 ```
 
-#### ⚠️ Limitation:
-- Not suitable for grouping related configuration.
-- Hard to refactor (property keys are hardcoded).
+**Limitation:** Not suitable for grouping related configuration. Hard to refactor (property keys are hardcoded).
 
 ---
 
-### 2️⃣ **Using `Environment` Interface**
+## 10.2 Using `Environment` Interface
+
 This gives **programmatic access** to properties and is useful when you want more control or conditional logic.
 
-#### ✅ Use Case:
-Use when you want to access properties dynamically or conditionally.
+**Use Case:** Use when you want to access properties dynamically or conditionally.
 
-#### 🧠 Syntax:
+**Syntax:**
 ```java
 @Autowired
 private Environment environment;
@@ -2901,7 +2831,7 @@ private Environment environment;
 String value = environment.getProperty("property.name");
 ```
 
-#### 🧪 Example:
+**Example:**
 ```java
 @Component
 public class MyComponent {
@@ -2916,19 +2846,17 @@ public class MyComponent {
 }
 ```
 
-#### ✔️ Pros:
-- Flexible, dynamic access
-- Can be used in utility classes or logic blocks
+**Pros:** Flexible, dynamic access. Can be used in utility classes or logic blocks.
 
 ---
 
-### 3️⃣ **Using `@ConfigurationProperties`**
-This is the **recommended** approach for binding a group of related properties into a POJO (Plain Old Java Object).
+## 10.3 Using `@ConfigurationProperties`
 
-#### ✅ Use Case:
-When you have multiple related configuration properties, such as database config, mail server, etc.
+This is the **recommended** approach for binding a group of related properties into a POJO.
 
-#### 🧠 Syntax:
+**Use Case:** When you have multiple related configuration properties, such as database config, mail server, etc.
+
+**Syntax:**
 ```java
 @ConfigurationProperties(prefix = "app")
 @Component
@@ -2944,7 +2872,7 @@ app.title=Spring Boot Application
 app.version=1.0.0
 ```
 
-#### 🧪 Example:
+**Example:**
 ```java
 @Component
 @ConfigurationProperties(prefix = "app")
@@ -2962,14 +2890,11 @@ public class AppConfig {
 }
 ```
 
-#### ✔️ Pros:
-- Type-safe
-- Easy to group and refactor
-- Easy to validate using `@Validated`
+**Pros:** Type-safe, easy to group and refactor, easy to validate using `@Validated`.
 
 ---
 
-### 🧠 Summary Table:
+## 10.4 Summary Table
 
 | Approach                  | When to Use                       | Pros                          | Limitation                   |
 |--------------------------|-----------------------------------|-------------------------------|------------------------------|
@@ -2977,19 +2902,15 @@ public class AppConfig {
 | `Environment`            | Dynamic/conditional property access | Flexible, programmatic        | Verbose, not type-safe       |
 | `@ConfigurationProperties` | Grouped configuration             | Type-safe, organized, reusable | Needs additional POJO setup  |
 
-
-
-<a id="config-properties-deep-dive"></a>
-
-## ✅ **Understanding `@EnableConfigurationProperties` and `@ConfigurationProperties`**
-
 ---
 
-### 🔹 1. **`@ConfigurationProperties(prefix = "cards")`**
+# 11. Configuration Properties (Deep Dive)
+
+## 11.1 `@ConfigurationProperties`
 
 This annotation is used to **bind external configuration properties (like from `application.properties` or `application.yml`)** to a Java class.
 
-#### 🔸 Example Configuration (`application.yml`):
+**Example Configuration (`application.yml`):**
 
 ```yaml
 cards:
@@ -2998,7 +2919,7 @@ cards:
     phone: 1234567890
 ```
 
-#### 🔸 Corresponding DTO (POJO):
+**Corresponding DTO (POJO):**
 
 ```java
 @Data
@@ -3009,16 +2930,16 @@ public class CardsContactInfoDto {
 }
 ```
 
-* The fields in the class map to the values under `cards.contact-info`.
-* The `prefix = "cards.contact-info"` tells Spring where to start mapping.
+- The fields in the class map to the values under `cards.contact-info`.
+- The `prefix = "cards.contact-info"` tells Spring where to start mapping.
 
 ---
 
-### 🔹 2. **`@EnableConfigurationProperties`**
+## 11.2 `@EnableConfigurationProperties`
 
 This enables support for `@ConfigurationProperties`-annotated beans. It is used to **register the DTO class as a Spring bean**.
 
-#### 🔸 Example Usage:
+**Example Usage:**
 
 ```java
 @EnableConfigurationProperties(value = {CardsContactInfoDto.class})
@@ -3028,47 +2949,46 @@ public class CardsConfig {
 }
 ```
 
-* This means Spring will read properties and create the `CardsContactInfoDto` bean, injecting values from the config.
-* Without this annotation, Spring Boot won’t know to bind and manage that DTO.
+- This means Spring will read properties and create the `CardsContactInfoDto` bean, injecting values from the config.
+- Without this annotation, Spring Boot won't know to bind and manage that DTO.
 
 ---
 
-## ✅ Summary
+## 11.3 Summary
 
 | Annotation                                      | Purpose                                                        |
 | ----------------------------------------------- | -------------------------------------------------------------- |
 | `@ConfigurationProperties(prefix = "cards")`    | Binds external config under `cards.*` to a class               |
 | `@EnableConfigurationProperties({Class.class})` | Registers the class as a Spring-managed bean to use the config |
 
-## ✅ **IoC Container in Spring (Inversion of Control Container)**
-
 ---
 
-### 🔹 What is IoC (Inversion of Control)?
+# 12. IoC Container in Spring
+
+## 12.1 What is IoC (Inversion of Control)?
 
 **Inversion of Control** is a principle where the control of creating and managing objects is **transferred from the developer to the framework**.
 
 In Spring, this means:
-
-* **You don’t create objects using `new` keyword**
-* Spring **creates, configures, and manages objects** (called **beans**) for you
+- **You don't create objects using `new` keyword**
+- Spring **creates, configures, and manages objects** (called **beans**) for you
 
 ---
 
-### 🔹 What is IoC Container?
+## 12.2 What is the IoC Container?
 
 The **IoC Container** is the **core of Spring Framework**. It is responsible for:
 
-* **Creating beans**
-* **Injecting dependencies**
-* **Managing lifecycle of beans**
-* **Wiring beans together**
+- **Creating beans**
+- **Injecting dependencies**
+- **Managing lifecycle of beans**
+- **Wiring beans together**
 
 > In simple words: **IoC Container is a bean factory** that gives you pre-configured, ready-to-use objects.
 
 ---
 
-### 🔹 Types of IoC Containers in Spring
+## 12.3 Types of IoC Containers in Spring
 
 | Container              | Interface                                        | Description                                                            |
 | ---------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
@@ -3077,22 +2997,21 @@ The **IoC Container** is the **core of Spring Framework**. It is responsible for
 
 ---
 
-### 🔹 How It Works
+## 12.4 How It Works
 
 1. You annotate classes with Spring annotations like `@Component`, `@Service`, `@Repository`, or configure them in XML.
 2. Spring scans and creates objects (beans).
 3. It injects dependencies into them using:
-
-   * Constructor Injection
-   * Setter Injection
-   * Field Injection
+   - Constructor Injection
+   - Setter Injection
+   - Field Injection
 4. You can retrieve these objects from the container or let Spring inject them wherever needed.
 
 ---
 
-### 🔹 Example: Using IoC Container
+## 12.5 Example: Using IoC Container
 
-#### 1. Component Classes
+### Component Classes
 
 ```java
 @Component
@@ -3119,7 +3038,7 @@ public class Car {
 }
 ```
 
-#### 2. Main Application
+### Main Application
 
 ```java
 @SpringBootApplication
@@ -3134,39 +3053,34 @@ public class MyApp {
 ```
 
 Here:
-
-* Spring Boot automatically scans and creates `Engine` and `Car` beans
-* It injects `Engine` into `Car`
-* This is Inversion of Control in action
-
----
-
-### 🔹 Benefits of IoC Container
-
-* **Loose coupling**
-* **Easier testing**
-* **Centralized configuration**
-* **Lifecycle management**
-* **Dependency injection made simple**
-
-<a id="spring-exception-handling"></a>
-
-## ✅ **Spring Exception Handling – Complete Overview**
-
-Spring provides a robust and flexible way to handle **exceptions globally, per controller, or per request** using annotations and well-defined patterns.
+- Spring Boot automatically scans and creates `Engine` and `Car` beans
+- It injects `Engine` into `Car`
+- This is Inversion of Control in action
 
 ---
 
-### 🔹 1. **Why Use Exception Handling in Spring?**
+## 12.6 Benefits of IoC Container
 
-* **Graceful error responses** to the client (instead of stack traces).
-* **Centralized error management**.
-* Return **custom status codes** (like 404, 400, 500).
-* Maintain **clean, readable controllers**.
+- **Loose coupling**
+- **Easier testing**
+- **Centralized configuration**
+- **Lifecycle management**
+- **Dependency injection made simple**
 
 ---
 
-### 🔹 2. **Types of Exception Handling in Spring**
+# 13. Spring Exception Handling
+
+## 13.1 Why Use Exception Handling in Spring?
+
+- **Graceful error responses** to the client (instead of stack traces).
+- **Centralized error management**.
+- Return **custom status codes** (like 404, 400, 500).
+- Maintain **clean, readable controllers**.
+
+---
+
+## 13.2 Types of Exception Handling in Spring
 
 | Type                       | Annotation Used                           | Scope                |
 | -------------------------- | ----------------------------------------- | -------------------- |
@@ -3176,7 +3090,7 @@ Spring provides a robust and flexible way to handle **exceptions globally, per c
 
 ---
 
-### 🔹 3. **Basic Example with `@ExceptionHandler`**
+## 13.3 Basic Example with `@ExceptionHandler`
 
 ```java
 @RestController
@@ -3195,11 +3109,11 @@ public class UserController {
 }
 ```
 
-* This handles `UserNotFoundException` only **within `UserController`**.
+- This handles `UserNotFoundException` only **within `UserController`**.
 
 ---
 
-### 🔹 4. **Global Exception Handling with `@ControllerAdvice`**
+## 13.4 Global Exception Handling with `@ControllerAdvice`
 
 ```java
 @ControllerAdvice
@@ -3218,12 +3132,12 @@ public class GlobalExceptionHandler {
 }
 ```
 
-* `@ControllerAdvice` makes the exception handling **global for all controllers**.
-* You can customize response bodies and status codes for different exceptions.
+- `@ControllerAdvice` makes the exception handling **global for all controllers**.
+- You can customize response bodies and status codes for different exceptions.
 
 ---
 
-### 🔹 5. **Using `@ResponseStatus` on Custom Exceptions**
+## 13.5 Using `@ResponseStatus` on Custom Exceptions
 
 ```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -3234,12 +3148,12 @@ public class UserNotFoundException extends RuntimeException {
 }
 ```
 
-* No need for `@ExceptionHandler` if you just want to map an exception to a specific status.
-* Useful for small projects or quick mappings.
+- No need for `@ExceptionHandler` if you just want to map an exception to a specific status.
+- Useful for small projects or quick mappings.
 
 ---
 
-### 🔹 6. **Returning Error Details as Object**
+## 13.6 Returning Error Details as Object
 
 ```java
 @ControllerAdvice
@@ -3266,16 +3180,16 @@ This gives **structured JSON error responses**.
 
 ---
 
-### 🔹 7. **Best Practices**
+## 13.7 Best Practices
 
-* Use **custom exception classes** for better clarity.
-* Use `@ControllerAdvice` for global consistency.
-* Avoid exposing internal details (stack traces) in production.
-* Return meaningful HTTP status codes (`400`, `401`, `404`, `500`, etc.).
+- Use **custom exception classes** for better clarity.
+- Use `@ControllerAdvice` for global consistency.
+- Avoid exposing internal details (stack traces) in production.
+- Return meaningful HTTP status codes (`400`, `401`, `404`, `500`, etc.).
 
 ---
 
-### ✅ Summary
+## 13.8 Summary
 
 | Annotation          | Purpose                                        |
 | ------------------- | ---------------------------------------------- |
@@ -3283,8 +3197,3 @@ This gives **structured JSON error responses**.
 | `@ControllerAdvice` | Declares global exception handlers             |
 | `@ResponseStatus`   | Maps an exception to an HTTP status code       |
 | `ResponseEntity`    | Full control over response body and status     |
-
----
-
-
-
