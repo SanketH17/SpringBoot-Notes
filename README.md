@@ -2,6 +2,25 @@
 
 **Spring Boot** is an open-source, Java-based framework designed to simplify the development of **standalone, production-ready Spring applications** with minimal configuration. It is built on top of the **Spring Framework** and follows the principle of **"Convention over Configuration"**, reducing boilerplate code and allowing developers to focus on business logic rather than setup and infrastructure.  
 
+## Index
+
+1. [What is Spring Boot?](#what-is-spring-boot)
+    1. [Key Features of Spring Boot](#key-features-of-spring-boot)
+    2. [Why Use Spring Boot?](#why-use-spring-boot)
+    3. [Example: Simple Spring Boot Application](#example-simple-spring-boot-application)
+2. [Spring Boot vs. Spring Framework: Key Differences](#spring-boot-vs-spring-framework-key-differences)
+3. [Internal Working of Spring Boot](#spring-boot-internal-working)
+4. [Spring Boot Architecture: Deep Dive](#spring-boot-architecture-deep-dive)
+5. [Annotations](#annotations)
+6. [Spring Data JPA](#1-spring-data-jpa)
+7. [Spring Security](#spring-security)
+    1. [Spring Security JWT Authentication – Full Flow](#spring-security-jwt-full-flow)
+8. [Spring Profiles](#spring-profiles)
+9. [How to Read Properties in Spring Boot](#read-properties)
+10. [Configuration Properties (Deep Dive)](#config-properties-deep-dive)
+11. [IoC Container in Spring](#ioc-container-in-spring-inversion-of-control-container)
+12. [Spring Exception Handling](#spring-exception-handling)
+
 ---
 
 ## **Key Features of Spring Boot**  
@@ -158,6 +177,8 @@ public class MyApp {
     }
 }
 ```
+
+<a id="spring-boot-internal-working"></a>
 
 ## ⚙️ complete breakdown of the **internal working of Spring Boot**, from the moment you hit **Run** until the application is **ready to serve requests**.
 
@@ -1792,6 +1813,8 @@ Add dependency:
 Here are the **Spring Security notes** based on your `SecurityConfig` class:
 
 ---
+<a id="spring-security"></a>
+
 ## 🛡️ Spring Security
 
 ### `SecurityConfig.java`
@@ -2400,6 +2423,8 @@ public class UserPrincipal implements UserDetails {
 | `isEnabled()`                   | Always `true`; override for soft-delete or deactivation support.       |
 
 
+<a id="spring-security-jwt-full-flow"></a>
+
 ## 🔁 **Spring Security JWT Authentication – Full Flow**
 
 ---
@@ -2544,6 +2569,10 @@ This means any user with `ROLE_ADMIN` also has all permissions of `ROLE_USER`.
 | `AuthenticationManager` | Authenticates user using the provider                 |
 | `DaoAuthenticationProvider` | Validates credentials and loads user from service  |
 | `RoleHierarchyImpl`     | Allows role inheritance (ADMIN > USER)                |
+
+---
+
+## Spring Profiles
 
 In **Spring Boot**, **profiles** are a way to segregate parts of your application configuration and make it only available in certain environments (e.g., development, testing, production).
 
@@ -2812,6 +2841,8 @@ Here's a clean and professional explanation of how to **read properties in Sprin
 
 ---
 
+<a id="read-properties"></a>
+
 ## 🔧 **How to Read Properties in Spring Boot**
 
 Spring Boot allows reading values from property files (`application.properties` or `application.yml`) in three primary ways:
@@ -2946,6 +2977,8 @@ public class AppConfig {
 
 
 
+<a id="config-properties-deep-dive"></a>
+
 ## ✅ **Understanding `@EnableConfigurationProperties` and `@ConfigurationProperties`**
 
 ---
@@ -3005,7 +3038,7 @@ public class CardsConfig {
 | `@ConfigurationProperties(prefix = "cards")`    | Binds external config under `cards.*` to a class               |
 | `@EnableConfigurationProperties({Class.class})` | Registers the class as a Spring-managed bean to use the config |
 
-### ✅ **IoC Container in Spring (Inversion of Control Container)**
+## ✅ **IoC Container in Spring (Inversion of Control Container)**
 
 ---
 
@@ -3114,13 +3147,15 @@ Here:
 * **Lifecycle management**
 * **Dependency injection made simple**
 
-### ✅ **Spring Exception Handling – Complete Overview**
+<a id="spring-exception-handling"></a>
+
+## ✅ **Spring Exception Handling – Complete Overview**
 
 Spring provides a robust and flexible way to handle **exceptions globally, per controller, or per request** using annotations and well-defined patterns.
 
 ---
 
-## 🔹 1. **Why Use Exception Handling in Spring?**
+### 🔹 1. **Why Use Exception Handling in Spring?**
 
 * **Graceful error responses** to the client (instead of stack traces).
 * **Centralized error management**.
@@ -3129,7 +3164,7 @@ Spring provides a robust and flexible way to handle **exceptions globally, per c
 
 ---
 
-## 🔹 2. **Types of Exception Handling in Spring**
+### 🔹 2. **Types of Exception Handling in Spring**
 
 | Type                       | Annotation Used                           | Scope                |
 | -------------------------- | ----------------------------------------- | -------------------- |
@@ -3139,7 +3174,7 @@ Spring provides a robust and flexible way to handle **exceptions globally, per c
 
 ---
 
-## 🔹 3. **Basic Example with `@ExceptionHandler`**
+### 🔹 3. **Basic Example with `@ExceptionHandler`**
 
 ```java
 @RestController
@@ -3162,7 +3197,7 @@ public class UserController {
 
 ---
 
-## 🔹 4. **Global Exception Handling with `@ControllerAdvice`**
+### 🔹 4. **Global Exception Handling with `@ControllerAdvice`**
 
 ```java
 @ControllerAdvice
@@ -3186,7 +3221,7 @@ public class GlobalExceptionHandler {
 
 ---
 
-## 🔹 5. **Using `@ResponseStatus` on Custom Exceptions**
+### 🔹 5. **Using `@ResponseStatus` on Custom Exceptions**
 
 ```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -3202,7 +3237,7 @@ public class UserNotFoundException extends RuntimeException {
 
 ---
 
-## 🔹 6. **Returning Error Details as Object**
+### 🔹 6. **Returning Error Details as Object**
 
 ```java
 @ControllerAdvice
@@ -3229,7 +3264,7 @@ This gives **structured JSON error responses**.
 
 ---
 
-## 🔹 7. **Best Practices**
+### 🔹 7. **Best Practices**
 
 * Use **custom exception classes** for better clarity.
 * Use `@ControllerAdvice` for global consistency.
