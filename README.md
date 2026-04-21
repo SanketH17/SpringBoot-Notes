@@ -1,7 +1,3 @@
-# **What is Spring Boot?**  
-
-**Spring Boot** is an open-source, Java-based framework designed to simplify the development of **standalone, production-ready Spring applications** with minimal configuration. It is built on top of the **Spring Framework** and follows the principle of **"Convention over Configuration"**, reducing boilerplate code and allowing developers to focus on business logic rather than setup and infrastructure.  
-
 ## Index
 
 1. [What is Spring Boot?](#what-is-spring-boot)
@@ -22,6 +18,12 @@
 12. [Spring Exception Handling](#spring-exception-handling)
 
 ---
+
+# **What is Spring Boot?**  
+
+**Spring Boot** is an open-source, Java-based framework designed to simplify the development of **standalone, production-ready Spring applications** with minimal configuration. It is built on top of the **Spring Framework** and follows the principle of **"Convention over Configuration"**, reducing boilerplate code and allowing developers to focus on business logic rather than setup and infrastructure.  
+
+
 
 ## **Key Features of Spring Boot**  
 
