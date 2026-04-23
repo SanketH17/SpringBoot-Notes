@@ -100,6 +100,17 @@
     - [🔹 `@ResponseStatus`](#-responsestatus)
     - [🔹 `@RequestHeader`](#-requestheader)
     - [🔹 `@CookieValue`](#-cookievalue)
+  - [5.11 API Versioning in Spring Boot](#511-api-versioning-in-spring-boot)
+    - [What is API Versioning?](#what-is-api-versioning)
+    - [Why Do You Need It?](#why-do-you-need-it)
+    - [The 4 Common Strategies](#the-4-common-strategies)
+      - [1. URI Path Versioning ✅ Most Popular](#1-uri-path-versioning--most-popular)
+      - [2. Request Parameter Versioning](#2-request-parameter-versioning)
+      - [3. Header Versioning](#3-header-versioning)
+      - [4. Media Type (Accept Header) Versioning](#4-media-type-accept-header-versioning)
+    - [Quick Comparison](#quick-comparison)
+    - [Best Practices](#best-practices)
+    - [Simple Rule of Thumb](#simple-rule-of-thumb)
 - [6. POJOs, JavaBeans, DTOs, DAOs, Value Objects, and Mappers](#6-pojos-javabeans-dtos-daos-value-objects-and-mappers)
   - [6.1 POJO (Plain Old Java Object)](#61-pojo-plain-old-java-object)
   - [6.2 JavaBean](#62-javabean)
@@ -1420,6 +1431,189 @@ public List<User> byRoles(@RequestParam List<String> role) {
       return "Preferred language: " + language;
   }
   ```
+
+---
+
+## 5.11 API Versioning in Spring Boot
+
+### What is API Versioning?
+
+When you build an API and later need to **change how it works** (new fields, different response structure, removed endpoints), you can't just break existing clients who rely on the old behavior. API versioning lets you **run multiple versions of your API simultaneously**, so old clients keep working while new clients use the improved version.
+
+---
+
+### Why Do You Need It?
+
+Imagine your API returns this for `/users/1`:
+
+```json
+{ "name": "Alice" }
+```
+
+Later, you want to return:
+
+```json
+{ "firstName": "Alice", "lastName": "Smith" }
+```
+
+If you just change it, every app using the old response **breaks**. With versioning, you expose both — old clients use `v1`, new clients use `v2`.
+
+---
+
+### The 4 Common Strategies
+
+#### 1. URI Path Versioning ✅ Most Popular
+
+The version number is part of the URL.
+
+```java
+@RestController
+public class UserController {
+
+  @GetMapping("/api/v1/users")
+  public String getUsersV1() {
+    return "V1: name field";
+  }
+
+  @GetMapping("/api/v2/users")
+  public String getUsersV2() {
+    return "V2: firstName + lastName fields";
+  }
+}
+```
+
+**Request:**
+```
+GET /api/v1/users
+GET /api/v2/users
+```
+
+✅ Easy to read and test in browser  
+❌ "Pollutes" the URL (URLs should ideally represent resources, not versions)
+
+---
+
+#### 2. Request Parameter Versioning
+
+The version is passed as a query parameter.
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+  @GetMapping(params = "version=1")
+  public String getUsersV1() {
+    return "V1 Response";
+  }
+
+  @GetMapping(params = "version=2")
+  public String getUsersV2() {
+    return "V2 Response";
+  }
+}
+```
+
+**Request:**
+```
+GET /api/users?version=1
+GET /api/users?version=2
+```
+
+✅ Clean URL path  
+❌ Query params feel less semantic for versioning
+
+---
+
+#### 3. Header Versioning
+
+The version is sent in a **custom HTTP request header**.
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+  @GetMapping(headers = "X-API-VERSION=1")
+  public String getUsersV1() {
+    return "V1 Response";
+  }
+
+  @GetMapping(headers = "X-API-VERSION=2")
+  public String getUsersV2() {
+    return "V2 Response";
+  }
+}
+```
+
+**Request:**
+```
+GET /api/users
+X-API-VERSION: 1
+```
+
+✅ Keeps URLs clean  
+❌ Not easily testable in a browser
+
+---
+
+#### 4. Media Type (Accept Header) Versioning
+
+The version is embedded in the `Accept` header — also called **content negotiation**.
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+  @GetMapping(produces = "application/vnd.myapp.v1+json")
+  public String getUsersV1() {
+    return "V1 Response";
+  }
+
+  @GetMapping(produces = "application/vnd.myapp.v2+json")
+  public String getUsersV2() {
+    return "V2 Response";
+  }
+}
+```
+
+**Request:**
+```
+GET /api/users
+Accept: application/vnd.myapp.v2+json
+```
+
+✅ Most REST-compliant approach  
+❌ Most complex; hardest to test and cache
+
+---
+
+### Quick Comparison
+
+| Strategy         | Example                               | Pros                 | Cons                        |
+|------------------|---------------------------------------|----------------------|-----------------------------|
+| URI Path         | `/api/v1/users`                       | Simple, visible      | "Messy" URLs               |
+| Request Param    | `/api/users?version=1`                | No URL change        | Less semantic               |
+| Header           | `X-API-VERSION: 1`                    | Clean URLs           | Not browser-friendly        |
+| Media Type       | `Accept: application/vnd.app.v1+json` | REST purist approach | Complex to implement        |
+
+---
+
+### Best Practices
+
+- **Start versioning from Day 1** — retrofitting is painful.
+- **Don't version every minor change** — only breaking changes need a new version.
+- **Deprecate, don't delete** — give clients a heads-up before removing an old version.
+- **Document your versions** — use tools like Swagger/OpenAPI to document each version clearly.
+- **Use URI versioning for public APIs** — it's the most widely understood approach.
+
+---
+
+### Simple Rule of Thumb
+
+> If your change **breaks existing clients** → create a new version.  
+> If it's **backward compatible** (e.g., adding a new optional field) → no new version needed.
 
 ---
 
