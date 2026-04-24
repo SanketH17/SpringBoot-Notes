@@ -1705,6 +1705,12 @@ public class UserDTO {
 
 ---
 
+<!-- Add Image -->
+![DTO vs Entity](imgs/dto1.png)
+![DTO vs Entity](imgs/dto2.png)
+
+
+
 ## 6.4 DAO (Data Access Object)
 
 **What is it?** A **DAO** encapsulates the logic for accessing persistent storage (e.g., database). In Spring Boot, DAO is implemented via `@Repository` interfaces.
