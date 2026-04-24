@@ -1964,6 +1964,10 @@ class Order {
 
 ---
 
+![ORM Diagram](imgs/orm.png)
+
+---
+
 ## 7.4 Entity, Repository, CrudRepository, JpaRepository
 
 ### `@Entity`
