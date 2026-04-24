@@ -121,22 +121,37 @@
   - [6.7 Summary Table](#67-summary-table)
 - [7. Spring Data JPA](#7-spring-data-jpa)
   - [7.1 Overview](#71-overview)
-  - [7.2 Entity, Repository, CrudRepository, JpaRepository](#72-entity-repository-crudrepository-jparepository)
+  - [7.2 How Spring Data JPA and Hibernate are related?](#72-how-spring-data-jpa-and-hibernate-are-related)
+    - [JPA (Java Persistence API)](#jpa-java-persistence-api)
+    - [Hibernate](#hibernate)
+    - [Spring Data JPA](#spring-data-jpa)
+    - [🧠 Key Idea](#-key-idea)
+    - [Summary Table](#summary-table-1)
+    - [Relationship Flow](#relationship-flow)
+  - [7.3 What is ORM Framework?](#73-what-is-orm-framework)
+    - [The Problem ORM Solves](#the-problem-orm-solves)
+      - [The Mismatch:](#the-mismatch)
+    - [Simple Benefits:](#simple-benefits)
+    - [ORM – The Translator](#orm--the-translator)
+      - [Java World ↔ Database World](#java-world--database-world)
+        - [User Object → USERS Table](#user-object--users-table)
+        - [Order Object → ORDERS Table](#order-object--orders-table)
+  - [7.4 Entity, Repository, CrudRepository, JpaRepository](#74-entity-repository-crudrepository-jparepository)
     - [`@Entity`](#entity)
     - [Repository Hierarchy](#repository-hierarchy)
-  - [7.3 JPQL and Native Queries](#73-jpql-and-native-queries)
+  - [7.5 JPQL and Native Queries](#75-jpql-and-native-queries)
     - [JPQL (Java Persistence Query Language)](#jpql-java-persistence-query-language)
     - [Native SQL](#native-sql)
-  - [7.4 Database Configuration](#74-database-configuration)
+  - [7.6 Database Configuration](#76-database-configuration)
     - [H2 (In-memory database, great for dev/test)](#h2-in-memory-database-great-for-devtest)
     - [MySQL / PostgreSQL Example](#mysql--postgresql-example)
-  - [7.5 Spring Boot with Hibernate](#75-spring-boot-with-hibernate)
-  - [7.6 DTOs and Model Mapping](#76-dtos-and-model-mapping)
+  - [7.7 Spring Boot with Hibernate](#77-spring-boot-with-hibernate)
+  - [7.8 DTOs and Model Mapping](#78-dtos-and-model-mapping)
     - [Why Use DTOs (Data Transfer Objects)?](#why-use-dtos-data-transfer-objects)
     - [Mapping Entity to DTO (Manual)](#mapping-entity-to-dto-manual)
     - [Using ModelMapper (Optional)](#using-modelmapper-optional)
-  - [7.7 Summary Table](#77-summary-table)
-  - [7.8 Spring Data JPA Annotations – Detailed Explanation](#78-spring-data-jpa-annotations--detailed-explanation)
+  - [7.9 Summary Table](#79-summary-table)
+  - [7.10 Spring Data JPA Annotations – Detailed Explanation](#710-spring-data-jpa-annotations--detailed-explanation)
     - [🔹 `@Entity`](#-entity)
     - [🔹 `@Id`](#-id)
     - [🔹 `@GeneratedValue`](#-generatedvalue)
@@ -1791,7 +1806,165 @@ public interface UserMapper {
 
 ---
 
-## 7.2 Entity, Repository, CrudRepository, JpaRepository
+## 7.2 How Spring Data JPA and Hibernate are related?
+
+### JPA (Java Persistence API)
+JPA is like **international car standards** (what every car must have: steering, brakes, gears).
+
+👉 It’s just a **rulebook** — you can't drive it!
+
+JPA is a **specification** (not an implementation) that defines a standard way to manage relational data in Java applications.
+Think of it as a contract or set of rules that describes how Java objects should be mapped to database tables.
+
+### Hibernate
+Hibernate is like **Toyota** — an actual car manufacturer that builds real cars following those standards, plus adds extra features.
+
+Hibernate is a **JPA implementation** — the actual ORM (Object-Relational Mapping) framework that does the heavy lifting.
+It handles:
+- Database operations
+- SQL generation
+- Caching
+- Lazy loading
+- Transaction management at the ORM level
+
+It sits between your Java objects and the database.
+
+### Spring Data JPA
+Spring Data JPA is like **Tesla Autopilot** — you just say *"take me to work"* and it handles all the driving:
+- Gear shifts
+- Navigation
+- Parking
+
+👉 Everything is handled automatically!
+
+Spring Data JPA is an **abstraction layer on top of JPA implementations** (like Hibernate).
+It provides:
+- Repository pattern
+- Query derivation
+- Pagination
+- Reduced boilerplate code
+
+It works with any JPA provider (Hibernate, EclipseLink, OpenJPA, etc.)
+
+---
+
+### 🧠 Key Idea
+
+JPA = Rules (Specification)
+
+Hibernate = Implementation (Engine)
+
+Spring Data JPA = Automation Layer (Ease of Use)
+
+---
+
+### Summary Table
+
+| Concept           | What it is?                | Provides                       |
+|------------------|---------------------------|--------------------------------|
+| JPA              | Specification             | Rules, annotations             |
+| Hibernate        | Implementation of JPA     | Actual ORM behavior            |
+| Spring Data JPA  | Abstraction on top of JPA | Repositories, less boilerplate |
+
+---
+
+### Relationship Flow
+
+```
+Spring Data JPA (Repositories)
+  ↓
+JPA (spec + EntityManager API)
+  ↓
+Hibernate (JPA Provider / ORM)
+  ↓
+JDBC
+  ↓
+Database
+```
+
+---
+
+## 7.3 What is ORM Framework?
+
+**ORM = Object-Relational Mapping**
+
+In simple words: ORM is a translator between your Java objects and database tables.
+
+---
+
+### The Problem ORM Solves
+
+#### The Mismatch:
+
+- **Java** thinks in **Objects**: User, Order, Product (with properties and methods)
+- **Databases** think in **Tables**: rows, columns, foreign keys, SQL
+
+> ORM is the bridge that automatically converts between these two different worlds!
+
+---
+
+### Simple Benefits:
+
+- **Write Java, not SQL** – Think in objects, not tables
+- **No manual conversion** – ORM does the translation
+- **Less code** – One line vs 10+ lines of JDBC
+- **Fewer errors** – No typos in SQL strings
+- **Database independent** – Same code works with MySQL, PostgreSQL, Oracle
+
+---
+
+### ORM – The Translator
+
+#### Java World ↔ Database World
+
+##### User Object → USERS Table
+
+**Java Class:**
+```java
+class User {
+    Long id;
+    String name;
+    String email;
+}
+```
+
+**Database Table (USERS):**
+
+| Id | name  | email       |
+|----|-------|-------------|
+| 1  | John  | j@mail.com  |
+| 2  | Alice | a@mail.com  |
+
+---
+
+##### Order Object → ORDERS Table
+
+**Java Class:**
+```java
+class Order {
+    Long id;
+    User user;
+    Double amount;
+}
+```
+
+**Database Table (ORDERS):**
+
+| Id | user_id | amount |
+|----|---------|--------|
+| 1  | 1       | 99.99  |
+| 2  | 1       | 59.99  |
+
+---
+
+> **Java Reference ──► ◄── Foreign Key**
+>
+> In Java, relationships are represented as object references (e.g., `User user` inside `Order`).
+> In the database, the same relationship is represented as a **Foreign Key** (`user_id` column in ORDERS table).
+
+---
+
+## 7.4 Entity, Repository, CrudRepository, JpaRepository
 
 ### `@Entity`
 Represents a table in the database.
@@ -1824,7 +1997,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 ---
 
-## 7.3 JPQL and Native Queries
+## 7.5 JPQL and Native Queries
 
 ### JPQL (Java Persistence Query Language)
 Object-oriented query language — works with entity names & fields.
@@ -1844,7 +2017,7 @@ User findByEmailNative(String email);
 
 ---
 
-## 7.4 Database Configuration
+## 7.6 Database Configuration
 
 ### H2 (In-memory database, great for dev/test)
 
@@ -1877,7 +2050,7 @@ spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
 ---
 
-## 7.5 Spring Boot with Hibernate
+## 7.7 Spring Boot with Hibernate
 
 Hibernate is the default JPA implementation used in Spring Boot.
 
@@ -1896,7 +2069,7 @@ Hibernate maps Java objects to relational DB tables and handles:
 
 ---
 
-## 7.6 DTOs and Model Mapping
+## 7.8 DTOs and Model Mapping
 
 ### Why Use DTOs (Data Transfer Objects)?
 - Avoid exposing full entity structure
@@ -1936,7 +2109,7 @@ Add dependency:
 
 ---
 
-## 7.7 Summary Table
+## 7.9 Summary Table
 
 | Concept              | Key Role                                      |
 |----------------------|-----------------------------------------------|
@@ -1950,7 +2123,7 @@ Add dependency:
 
 ---
 
-## 7.8 Spring Data JPA Annotations – Detailed Explanation
+## 7.10 Spring Data JPA Annotations – Detailed Explanation
 
 ### 🔹 `@Entity`
 - **Purpose**: Marks a class as a JPA entity (mapped to a database table).
