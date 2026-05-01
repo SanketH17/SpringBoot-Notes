@@ -101,6 +101,10 @@ public void allServiceMethods() {}
 
 ---
 
+<!-- add image -->
+![AOP Implementation](imgs/aop1.png)
+
+
 ### 4. Advice — *The Action*
 
 **Advice** is the actual code that runs when a Pointcut is matched.  
