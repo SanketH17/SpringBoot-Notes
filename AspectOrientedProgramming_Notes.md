@@ -194,7 +194,27 @@ That's it. Spring handles the rest automatically. ✅
 
 ## 🏗️ How AOP Works Under the Hood (Simple Version)
 
+### How Spring AOP Works: The Magic of Proxies
+
+When we implement AOP inside our application using the Spring framework, it intercepts each method call and applies the logic defined in the Aspect. This process of inserting the Aspect logic into the target object is called **Weaving**.
+
+### The Mechanism: Proxy Objects
+
+How does Spring achieve this interception and weaving without modifying your original business code? It uses the **Proxy Design Pattern**.
+
+1. **Original Bean:** You define your original business class (e.g., `ContactController`).
+2. **The Proxy:** Spring does not give you a direct reference to your original `ContactController` bean. Instead, it wraps the target bean with a Proxy object.
+3. **Interception:** When you call a method on the controller, you are actually calling the method on the Proxy.
+
+    - The Proxy intercepts the call.
+    - The Proxy executes the Advice (your logging/security logic).
+    - The Proxy then delegates the call to the actual method on the Target Object (your original bean).
+
 AOP uses **Proxy objects**. When you call a method on a Spring bean, you're actually calling a *wrapper* (proxy) around the real object. The proxy runs your advice, then calls the real method.
+
+---
+<!-- add image -->
+![AOP Proxy](./imgs/aop2.png)
 
 ```
 Your Code
