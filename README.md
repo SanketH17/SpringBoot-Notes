@@ -163,50 +163,62 @@
     - [🔹 `@ManyToMany`](#-manytomany)
     - [🔹 `@JoinColumn`](#-joincolumn)
     - [🔹 `@Repository`](#-repository)
-- [8. Spring Profiles](#8-spring-profiles)
-  - [8.1 What is a Spring Profile?](#81-what-is-a-spring-profile)
-  - [8.2 Common Use Cases](#82-common-use-cases)
-  - [8.3 How to Define a Profile](#83-how-to-define-a-profile)
+- [8. Logging in Spring Boot](#8-logging-in-spring-boot)
+  - [8.1 What is Logging?](#81-what-is-logging)
+  - [8.2 Key Benefits of Logging](#82-key-benefits-of-logging)
+  - [8.3 Why Not Use `System.out.println()`](#83-why-not-use-systemoutprintln)
+  - [8.4 SLF4J and Logging Frameworks](#84-slf4j-and-logging-frameworks)
+  - [8.5 Default Log Format](#85-default-log-format)
+  - [8.6 Formatting Logs (Pattern Configuration)](#86-formatting-logs-pattern-configuration)
+  - [8.7 Log Levels in Spring Boot](#87-log-levels-in-spring-boot)
+  - [8.8 Changing Log Levels in `application.properties`](#88-changing-log-levels-in-applicationproperties)
+  - [8.9 File Logging and JSON Logs](#89-file-logging-and-json-logs)
+  - [8.10 Logging Example (SLF4J)](#810-logging-example-slf4j)
+  - [8.11 Logging Example with Lombok](#811-logging-example-with-lombok)
+- [9. Spring Profiles](#9-spring-profiles)
+  - [9.1 What is a Spring Profile?](#91-what-is-a-spring-profile)
+  - [9.2 Common Use Cases](#92-common-use-cases)
+  - [9.3 How to Define a Profile](#93-how-to-define-a-profile)
     - [1. `application.properties/yml` files](#1-applicationpropertiesyml-files)
     - [2. `application.yml` example](#2-applicationyml-example)
-  - [8.4 Activating a Profile](#84-activating-a-profile)
+  - [9.4 Activating a Profile](#94-activating-a-profile)
     - [1. In application.properties](#1-in-applicationproperties)
     - [2. As a command-line argument](#2-as-a-command-line-argument)
     - [3. As an environment variable](#3-as-an-environment-variable)
     - [4. In application code](#4-in-application-code)
-  - [8.5 Profile-specific Beans](#85-profile-specific-beans)
+  - [9.5 Profile-specific Beans](#95-profile-specific-beans)
     - [`@Profile` on Classes](#profile-on-classes)
-  - [8.6 Checking Active Profile at Runtime](#86-checking-active-profile-at-runtime)
-  - [8.7 Why Use Spring Profiles?](#87-why-use-spring-profiles)
-  - [8.8 How Spring Resolves Profiles](#88-how-spring-resolves-profiles)
-  - [8.9 Best Practices](#89-best-practices)
-- [9. How to Read Properties in Spring Boot](#9-how-to-read-properties-in-spring-boot)
-  - [9.1 Using `@Value` Annotation](#91-using-value-annotation)
-  - [9.2 Using `Environment` Interface](#92-using-environment-interface)
-  - [9.3 Using `@ConfigurationProperties`](#93-using-configurationproperties)
-  - [9.4 Summary Table](#94-summary-table)
-- [10. Configuration Properties (Deep Dive)](#10-configuration-properties-deep-dive)
-  - [10.1 `@ConfigurationProperties`](#101-configurationproperties)
-  - [10.2 `@EnableConfigurationProperties`](#102-enableconfigurationproperties)
-  - [10.3 Summary](#103-summary)
-- [11. IoC Container in Spring](#11-ioc-container-in-spring)
-  - [11.1 What is IoC (Inversion of Control)?](#111-what-is-ioc-inversion-of-control)
-  - [11.2 What is the IoC Container?](#112-what-is-the-ioc-container)
-  - [11.3 Types of IoC Containers in Spring](#113-types-of-ioc-containers-in-spring)
-  - [11.4 How It Works](#114-how-it-works)
-  - [11.5 Example: Using IoC Container](#115-example-using-ioc-container)
+  - [9.6 Checking Active Profile at Runtime](#96-checking-active-profile-at-runtime)
+  - [9.7 Why Use Spring Profiles?](#97-why-use-spring-profiles)
+  - [9.8 How Spring Resolves Profiles](#98-how-spring-resolves-profiles)
+  - [9.9 Best Practices](#99-best-practices)
+- [10. How to Read Properties in Spring Boot](#10-how-to-read-properties-in-spring-boot)
+  - [10.1 Using `@Value` Annotation](#101-using-value-annotation)
+  - [10.2 Using `Environment` Interface](#102-using-environment-interface)
+  - [10.3 Using `@ConfigurationProperties`](#103-using-configurationproperties)
+  - [10.4 Summary Table](#104-summary-table)
+- [11. Configuration Properties (Deep Dive)](#11-configuration-properties-deep-dive)
+  - [11.1 `@ConfigurationProperties`](#111-configurationproperties)
+  - [11.2 `@EnableConfigurationProperties`](#112-enableconfigurationproperties)
+  - [11.3 Summary](#113-summary)
+- [12. IoC Container in Spring](#12-ioc-container-in-spring)
+  - [12.1 What is IoC (Inversion of Control)?](#121-what-is-ioc-inversion-of-control)
+  - [12.2 What is the IoC Container?](#122-what-is-the-ioc-container)
+  - [12.3 Types of IoC Containers in Spring](#123-types-of-ioc-containers-in-spring)
+  - [12.4 How It Works](#124-how-it-works)
+  - [12.5 Example: Using IoC Container](#125-example-using-ioc-container)
     - [Component Classes](#component-classes)
     - [Main Application](#main-application)
-  - [11.6 Benefits of IoC Container](#116-benefits-of-ioc-container)
-- [12. Spring Exception Handling](#12-spring-exception-handling)
-  - [12.1 Why Use Exception Handling in Spring?](#121-why-use-exception-handling-in-spring)
-  - [12.2 Types of Exception Handling in Spring](#122-types-of-exception-handling-in-spring)
-  - [12.3 Basic Example with `@ExceptionHandler`](#123-basic-example-with-exceptionhandler)
-  - [12.4 Global Exception Handling with `@ControllerAdvice`](#124-global-exception-handling-with-controlleradvice)
-  - [12.5 Using `@ResponseStatus` on Custom Exceptions](#125-using-responsestatus-on-custom-exceptions)
-  - [12.6 Returning Error Details as Object](#126-returning-error-details-as-object)
-  - [12.7 Best Practices](#127-best-practices)
-  - [12.8 Summary](#128-summary)
+  - [12.6 Benefits of IoC Container](#126-benefits-of-ioc-container)
+- [13. Spring Exception Handling](#13-spring-exception-handling)
+  - [13.1 Why Use Exception Handling in Spring?](#131-why-use-exception-handling-in-spring)
+  - [13.2 Types of Exception Handling in Spring](#132-types-of-exception-handling-in-spring)
+  - [13.3 Basic Example with `@ExceptionHandler`](#133-basic-example-with-exceptionhandler)
+  - [13.4 Global Exception Handling with `@ControllerAdvice`](#134-global-exception-handling-with-controlleradvice)
+  - [13.5 Using `@ResponseStatus` on Custom Exceptions](#135-using-responsestatus-on-custom-exceptions)
+  - [13.6 Returning Error Details as Object](#136-returning-error-details-as-object)
+  - [13.7 Best Practices](#137-best-practices)
+  - [13.8 Summary](#138-summary)
 
 ---
 
@@ -2216,15 +2228,232 @@ Add dependency:
 
 ---
 
-# 8. Spring Profiles
+# 8. Logging in Spring Boot
 
-## 8.1 What is a Spring Profile?
+## 8.1 What is Logging?
+
+- Logging is the process of recording important events in an application.
+- Helps in debugging, monitoring, and troubleshooting.
+- Logs provide information like errors, warnings, execution flow, and performance insights.
+
+---
+
+## 8.2 Key Benefits of Logging
+
+1. Debugging - Helps in finding and fixing errors.
+2. Monitoring - Tracks application behavior over time.
+3. Auditing - Keeps a record of important actions.
+4. Performance Analysis - Helps in identifying slow parts of the app.
+
+---
+
+## 8.3 Why Not Use `System.out.println()`
+
+Because `System.out` has:
+- No log levels
+- No file logging
+- No formatting
+- Not production-ready
+
+In real apps, `System.out.println()` is not acceptable.
+
+---
+
+## 8.4 SLF4J and Logging Frameworks
+
+Spring Boot uses SLF4J (Simple Logging Facade for Java) with Logback by default. No extra dependencies are needed for basic logging.
+
+SLF4J is a common logging interface that Spring Boot uses to write logs without caring which logging framework is underneath.
+Spring Boot supports different logging frameworks:
+
+| Logging Framework | Description |
+|-------------------|-------------|
+| SLF4J (Facade) | Generic logging API (recommended best practice) |
+| Logback (Default) | The default Spring Boot logger |
+| Log4j2 | Powerful and feature-rich logging |
+| Java Util Logging (JUL) | Built-in Java logging |
+
+Each one has different APIs. If your code depends directly on Logback:
+- Switching to Log4j2 later becomes painful
+- Your code becomes tightly coupled
+
+SLF4J solves this by providing one common logging API that delegates to the actual framework.
+
+---
+
+## 8.5 Default Log Format
+
+```
+2100-11-20T16:37:12.913Z  INFO 127185 --- [myapp] [main] com.example.MyApp : Application started successfully!
+```
+
+The following items are output:
+
+- Date and time: Millisecond precision and easily sortable
+- Log level: ERROR, WARN, INFO, DEBUG, or TRACE
+- Process ID
+- A --- separator to distinguish the start of actual log messages
+- Application name: Enclosed in square brackets (logged by default only if spring.application.name is set)
+- Application group: Enclosed in square brackets (logged by default only if spring.application.group is set)
+- Thread name: Enclosed in square brackets (may be truncated for console output)
+- Correlation ID: If tracing is enabled (not shown in the sample above)
+- Logger name: Usually the source class name (often abbreviated)
+- The log message
+
+---
+
+## 8.6 Formatting Logs (Pattern Configuration)
+
+```properties
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+```
+
+Example output:
+
+```
+2100-11-20 10:30:45 [main] INFO  com.example.MyService - Application started!
+```
+
+---
+
+## 8.7 Log Levels in Spring Boot
+
+By default, Spring Boot sets the root log level to INFO.
+
+| Log Level | Description | Example Use Case |
+|----------|-------------|------------------|
+| TRACE | Most detailed logs | Tracking method calls |
+| DEBUG | Debugging information | Variable values, steps in execution |
+| INFO | General application info | Startup messages, business events |
+| WARN | Potential issues | Deprecated API usage, high memory usage |
+| ERROR | Serious problems | Exceptions, failed transactions |
+
+Impact of different log levels:
+
+| Configured Log Level | Logs That Appear |
+|----------------------|------------------|
+| TRACE | TRACE, DEBUG, INFO, WARN, ERROR |
+| DEBUG | DEBUG, INFO, WARN, ERROR |
+| INFO | INFO, WARN, ERROR |
+| WARN | WARN, ERROR |
+| ERROR | ERROR only |
+
+---
+
+## 8.8 Changing Log Levels in `application.properties`
+
+Set log level for the entire application:
+
+```properties
+logging.level.root=DEBUG
+```
+
+Set log level for a specific package:
+
+```properties
+logging.level.com.example.myapp=DEBUG
+```
+
+Log groups let you assign a single log level to multiple packages at once:
+
+```properties
+logging.group.jobportal_error=com.eazybytes.jobportal.aspects,com.eazybytes.jobportal.controller
+logging.level.jobportal_error=ERROR
+```
+
+---
+
+## 8.9 File Logging and JSON Logs
+
+By default, logs are printed to the console. To save them in a file, configure:
+
+```properties
+logging.file.name=/path/to/logs/app.log
+```
+
+Using JSON logs for structured logging (for easy parsing in ELK or cloud logging):
+
+```properties
+logging.pattern.file={"timestamp":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","logger":"%c","message":"%m"}
+```
+
+For advanced use cases, use `logback.xml` under `src/main/resources/` to:
+- Decide where logs go (console or file)
+- Decide how logs look (format)
+- Decide how much to log (INFO, ERROR, DEBUG)
+- Control log rotation
+
+---
+
+## 8.10 Logging Example (SLF4J)
+
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/logging")
+public class LoggingController {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(LoggingController.class);
+
+  @GetMapping("/test")
+  public ResponseEntity<String> testLogging() {
+    LOGGER.trace("TRACE: Tracking execution flow.");
+    LOGGER.debug("DEBUG: Debugging details.");
+    LOGGER.info("INFO: Application events.");
+    LOGGER.warn("WARN: Something might go wrong.");
+    LOGGER.error("ERROR: An error occurred.");
+    return ResponseEntity.status(HttpStatus.OK).body("Logging tested successfully");
+  }
+}
+```
+
+---
+
+## 8.11 Logging Example with Lombok
+
+```java
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Slf4j
+@RestController
+@RequestMapping("/logging")
+public class LoggingController {
+
+  @GetMapping("/test")
+  public ResponseEntity<String> testLogging() {
+    log.trace("TRACE: Tracking execution flow.");
+    log.debug("DEBUG: Debugging details.");
+    log.info("INFO: Application events.");
+    log.warn("WARN: Something might go wrong.");
+    log.error("ERROR: An error occurred.");
+    return ResponseEntity.status(HttpStatus.OK).body("Logging tested successfully");
+  }
+}
+```
+
+---
+
+# 9. Spring Profiles
+
+## 9.1 What is a Spring Profile?
 
 A **profile** in Spring Boot allows you to define different configurations for different environments. You can annotate beans or specify configurations in property files that should only be active when a specific profile is selected.
 
 ---
 
-## 8.2 Common Use Cases
+## 9.2 Common Use Cases
 
 - Use different databases in **dev**, **test**, and **prod**
 - Change logging levels per environment
@@ -2232,7 +2461,7 @@ A **profile** in Spring Boot allows you to define different configurations for d
 
 ---
 
-## 8.3 How to Define a Profile
+## 9.3 How to Define a Profile
 
 ### 1. `application.properties/yml` files
 
@@ -2276,7 +2505,7 @@ spring:
 
 ---
 
-## 8.4 Activating a Profile
+## 9.4 Activating a Profile
 
 ### 1. In application.properties
 
@@ -2308,7 +2537,7 @@ public DataSource devDataSource() {
 
 ---
 
-## 8.5 Profile-specific Beans
+## 9.5 Profile-specific Beans
 
 ```java
 @Configuration
@@ -2340,7 +2569,7 @@ public class ProdConfiguration {
 
 ---
 
-## 8.6 Checking Active Profile at Runtime
+## 9.6 Checking Active Profile at Runtime
 
 ```java
 @Autowired
@@ -2353,7 +2582,7 @@ public void printActiveProfiles() {
 
 ---
 
-## 8.7 Why Use Spring Profiles?
+## 9.7 Why Use Spring Profiles?
 
 In real-world applications, different environments need different configurations:
 
@@ -2367,7 +2596,7 @@ Using profiles, you can easily **switch between environments** without changing 
 
 ---
 
-## 8.8 How Spring Resolves Profiles
+## 9.8 How Spring Resolves Profiles
 
 - First, `application.properties` is read.
 - Then, `application-{profile}.properties` overrides it if `spring.profiles.active` is set.
@@ -2379,7 +2608,7 @@ Using profiles, you can easily **switch between environments** without changing 
 
 ---
 
-## 8.9 Best Practices
+## 9.9 Best Practices
 
 - Use **`default` profile** for fallback configuration.
 - Avoid hardcoding environment-specific values in code.
@@ -2409,13 +2638,13 @@ Switch environments with:
 
 ---
 
-# 9. How to Read Properties in Spring Boot
+# 10. How to Read Properties in Spring Boot
 
 Spring Boot allows reading values from property files (`application.properties` or `application.yml`) in three primary ways:
 
 ---
 
-## 9.1 Using `@Value` Annotation
+## 10.1 Using `@Value` Annotation
 
 This is the most straightforward way to inject a **single property** value directly into a field.
 
@@ -2449,7 +2678,7 @@ public class MyComponent {
 
 ---
 
-## 9.2 Using `Environment` Interface
+## 10.2 Using `Environment` Interface
 
 This gives **programmatic access** to properties and is useful when you want more control or conditional logic.
 
@@ -2482,7 +2711,7 @@ public class MyComponent {
 
 ---
 
-## 9.3 Using `@ConfigurationProperties`
+## 10.3 Using `@ConfigurationProperties`
 
 This is the **recommended** approach for binding a group of related properties into a POJO.
 
@@ -2526,7 +2755,7 @@ public class AppConfig {
 
 ---
 
-## 9.4 Summary Table
+## 10.4 Summary Table
 
 | Approach                  | When to Use                       | Pros                          | Limitation                   |
 |--------------------------|-----------------------------------|-------------------------------|------------------------------|
@@ -2536,9 +2765,9 @@ public class AppConfig {
 
 ---
 
-# 10. Configuration Properties (Deep Dive)
+# 11. Configuration Properties (Deep Dive)
 
-## 10.1 `@ConfigurationProperties`
+## 11.1 `@ConfigurationProperties`
 
 This annotation is used to **bind external configuration properties (like from `application.properties` or `application.yml`)** to a Java class.
 
@@ -2567,7 +2796,7 @@ public class CardsContactInfoDto {
 
 ---
 
-## 10.2 `@EnableConfigurationProperties`
+## 11.2 `@EnableConfigurationProperties`
 
 This enables support for `@ConfigurationProperties`-annotated beans. It is used to **register the DTO class as a Spring bean**.
 
@@ -2586,7 +2815,7 @@ public class CardsConfig {
 
 ---
 
-## 10.3 Summary
+## 11.3 Summary
 
 | Annotation                                      | Purpose                                                        |
 | ----------------------------------------------- | -------------------------------------------------------------- |
@@ -2595,9 +2824,9 @@ public class CardsConfig {
 
 ---
 
-# 11. IoC Container in Spring
+# 12. IoC Container in Spring
 
-## 11.1 What is IoC (Inversion of Control)?
+## 12.1 What is IoC (Inversion of Control)?
 
 **Inversion of Control** is a principle where the control of creating and managing objects is **transferred from the developer to the framework**.
 
@@ -2607,7 +2836,7 @@ In Spring, this means:
 
 ---
 
-## 11.2 What is the IoC Container?
+## 12.2 What is the IoC Container?
 
 The **IoC Container** is the **core of Spring Framework**. It is responsible for:
 
@@ -2620,7 +2849,7 @@ The **IoC Container** is the **core of Spring Framework**. It is responsible for
 
 ---
 
-## 11.3 Types of IoC Containers in Spring
+## 12.3 Types of IoC Containers in Spring
 
 | Container              | Interface                                        | Description                                                            |
 | ---------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
@@ -2629,7 +2858,7 @@ The **IoC Container** is the **core of Spring Framework**. It is responsible for
 
 ---
 
-## 11.4 How It Works
+## 12.4 How It Works
 
 1. You annotate classes with Spring annotations like `@Component`, `@Service`, `@Repository`, or configure them in XML.
 2. Spring scans and creates objects (beans).
@@ -2641,7 +2870,7 @@ The **IoC Container** is the **core of Spring Framework**. It is responsible for
 
 ---
 
-## 11.5 Example: Using IoC Container
+## 12.5 Example: Using IoC Container
 
 ### Component Classes
 
@@ -2691,7 +2920,7 @@ Here:
 
 ---
 
-## 11.6 Benefits of IoC Container
+## 12.6 Benefits of IoC Container
 
 - **Loose coupling**
 - **Easier testing**
@@ -2701,9 +2930,9 @@ Here:
 
 ---
 
-# 12. Spring Exception Handling
+# 13. Spring Exception Handling
 
-## 12.1 Why Use Exception Handling in Spring?
+## 13.1 Why Use Exception Handling in Spring?
 
 - **Graceful error responses** to the client (instead of stack traces).
 - **Centralized error management**.
@@ -2712,7 +2941,7 @@ Here:
 
 ---
 
-## 12.2 Types of Exception Handling in Spring
+## 13.2 Types of Exception Handling in Spring
 
 | Type                       | Annotation Used                           | Scope                |
 | -------------------------- | ----------------------------------------- | -------------------- |
@@ -2722,7 +2951,7 @@ Here:
 
 ---
 
-## 12.3 Basic Example with `@ExceptionHandler`
+## 13.3 Basic Example with `@ExceptionHandler`
 
 ```java
 @RestController
@@ -2745,7 +2974,7 @@ public class UserController {
 
 ---
 
-## 12.4 Global Exception Handling with `@ControllerAdvice`
+## 13.4 Global Exception Handling with `@ControllerAdvice`
 
 ```java
 @ControllerAdvice
@@ -2769,7 +2998,7 @@ public class GlobalExceptionHandler {
 
 ---
 
-## 12.5 Using `@ResponseStatus` on Custom Exceptions
+## 13.5 Using `@ResponseStatus` on Custom Exceptions
 
 ```java
 @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -2785,7 +3014,7 @@ public class UserNotFoundException extends RuntimeException {
 
 ---
 
-## 12.6 Returning Error Details as Object
+## 13.6 Returning Error Details as Object
 
 ```java
 @ControllerAdvice
@@ -2812,7 +3041,7 @@ This gives **structured JSON error responses**.
 
 ---
 
-## 12.7 Best Practices
+## 13.7 Best Practices
 
 - Use **custom exception classes** for better clarity.
 - Use `@ControllerAdvice` for global consistency.
@@ -2821,7 +3050,7 @@ This gives **structured JSON error responses**.
 
 ---
 
-## 12.8 Summary
+## 13.8 Summary
 
 | Annotation          | Purpose                                        |
 | ------------------- | ---------------------------------------------- |
