@@ -38,6 +38,20 @@ This is called **Cross-Cutting Concerns** — things that cut across your whole 
 
 ## 🧩 Core Concepts (The 5 Things You Must Know)
 
+### Key AOP Terminology: The 3 W's
+
+To implement Aspect-Oriented Programming (AOP), Spring requires you to define three critical components:
+
+| Term | What it Asks | Definition |
+|---|---|---|
+| Aspect (WHAT) | WHAT code to execute? | WHAT code or logic we want Spring to execute when you call a specific method. This is called an Aspect. |
+| Advice (WHEN) | WHEN does the method need to be executed? | WHEN Spring needs to execute the given Aspect. For example, before or after the method call. This is called Advice. |
+| Pointcut (WHICH) | WHICH method needs to be intercepted? | WHICH method inside the app the framework needs to intercept and execute the given Aspect. This is called a Pointcut. |
+
+Join point defines the event that triggers the execution of an aspect. In Spring, this event is always a method call.
+
+Target object is the bean that declares the method/pointcut which is intercepted by an aspect.
+
 ### 1. Aspect — *The Door-Person*
 
 An **Aspect** is a class that contains the extra behaviour you want to add.  
