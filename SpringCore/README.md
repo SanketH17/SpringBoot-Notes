@@ -30,13 +30,13 @@
 
 ## 1. What is Spring?
 
-Spring is a **Java framework** used to build enterprise applications. It provides tools that make development easier by handling things like **dependency injection, database connectivity, and application components**. It also supports features like **AOP** and helps developers focus more on business logic. Step-4-Spring-Framework-Level-I…
+Spring is a **Java framework** used to build enterprise applications. It provides tools that make development easier by handling things like **dependency injection, database connectivity, and application components**. It also supports features like **AOP** and helps developers focus more on business logic.
 
 ---
 
 ## 2. What are the advantages of the Spring framework?
 
-Spring makes application development easier by managing objects and their dependencies. It supports **transaction management**, integrates well with other technologies, and makes **testing easier**. With **Spring Boot and Spring Cloud**, we can also build and maintain scalable and reliable applications faster. Step-4-Spring-Framework-Level-I…
+Spring makes application development easier by managing objects and their dependencies. It supports **transaction management**, integrates well with other technologies, and makes **testing easier**. With **Spring Boot and Spring Cloud**, we can also build and maintain scalable and reliable applications faster.
 
 ---
 
@@ -52,7 +52,7 @@ Some important Spring modules are:
 - **Test** — testing support
 - **Messaging, Transactions, and Cloud** — support for specific application needs
 
-Each module focuses on a particular area of application development. Step-4-Spring-Framework-Level-I…
+Each module focuses on a particular area of application development.
 
 ---
 
@@ -60,7 +60,7 @@ Each module focuses on a particular area of application development. Step-4-Spri
 
 **Spring** is the main framework that provides features like dependency injection, AOP, and other tools for building Java applications.
 
-**Spring Boot** makes Spring easier to use by providing **auto-configuration, ready-made setups, and an embedded server**. This reduces configuration and helps us start applications quickly. Step-4-Spring-Framework-Level-I…
+**Spring Boot** makes Spring easier to use by providing **auto-configuration, ready-made setups, and an embedded server**. This reduces configuration and helps us start applications quickly.
 
 ---
 
@@ -68,7 +68,7 @@ Each module focuses on a particular area of application development. Step-4-Spri
 
 A **Spring Bean** is an object that is **created and managed by the Spring framework**.
 
-Spring takes care of creating, configuring, and managing these objects, which makes it easier for different components of the application to work together. Step-4-Spring-Framework-Level-I…
+Spring takes care of creating, configuring, and managing these objects, which makes it easier for different components of the application to work together.
 
 ---
 
@@ -78,7 +78,7 @@ Spring takes care of creating, configuring, and managing these objects, which ma
 
 **DI (Dependency Injection)** is a way to implement IoC. Instead of a class creating its dependencies itself, those dependencies are **provided to the class by Spring**.
 
-This makes the code easier to manage, test, and change. Step-4-Spring-Framework-Level-I…
+This makes the code easier to manage, test, and change.
 
 ---
 
@@ -86,7 +86,7 @@ This makes the code easier to manage, test, and change. Step-4-Spring-Framework-
 
 The **IoC container** is responsible for creating and managing Spring objects, called **beans**.
 
-It also provides the required dependencies to those beans and connects the objects together automatically. Step-4-Spring-Framework-Level-I…
+It also provides the required dependencies to those beans and connects the objects together automatically.
 
 ---
 
@@ -100,7 +100,7 @@ It is the basic container that creates and manages beans.
 ### 2. ApplicationContext
 It is a more advanced container that provides additional features like **event handling** and better integration with Spring features.
 
-In most applications, **ApplicationContext** is commonly used. Step-4-Spring-Framework-Level-I…
+In most applications, **ApplicationContext** is commonly used.
 
 ---
 
@@ -121,7 +121,7 @@ public class AppConfig {
 }
 ```
 
-Spring uses the `@Bean` method to create and manage the bean. Step-4-Spring-Framework-Level-I…
+Spring uses the `@Bean` method to create and manage the bean.
 
 ---
 
@@ -129,7 +129,7 @@ Spring uses the `@Bean` method to create and manage the bean. Step-4-Spring-Fram
 
 **Constructor injection** is generally the preferred way.
 
-It ensures that all required dependencies are provided when the object is created. It also makes dependencies clear and makes the class easier to test. Step-4-Spring-Framework-Level-I…
+It ensures that all required dependencies are provided when the object is created. It also makes dependencies clear and makes the class easier to test.
 
 ---
 
@@ -157,7 +157,7 @@ This ensures that required dependencies are available immediately.
 
 Dependencies are provided through **setter methods after the object is created**.
 
-It gives more flexibility when a dependency is optional or may need to be changed later. Step-4-Spring-Framework-Level-I…
+It gives more flexibility when a dependency is optional or may need to be changed later.
 
 ---
 
@@ -171,7 +171,7 @@ The main scopes are:
 - **Prototype** — a new instance each time the bean is requested
 - **Request** — one instance per HTTP request
 - **Session** — one instance per user session
-- **Global Session** — one instance per global session, mainly for special cases such as portlet applications Step-4-Spring-Framework-Level-I…
+- **Global Session** — one instance per global session, mainly for special cases such as portlet applications
 
 ---
 
@@ -185,7 +185,7 @@ For example, a bean containing common configuration or shared functionality.
 
 ### Prototype
 
-Use **Prototype** when we need a **new instance every time the bean is requested**, especially when the object has different state for different operations or uses. Step-4-Spring-Framework-Level-I…
+Use **Prototype** when we need a **new instance every time the bean is requested**, especially when the object has different state for different operations or uses.
 
 ---
 
@@ -193,7 +193,7 @@ Use **Prototype** when we need a **new instance every time the bean is requested
 
 The default bean scope is **Singleton**.
 
-This means Spring creates one bean instance and shares it within the **Spring application context**. Step-4-Spring-Framework-Level-I…
+This means Spring creates one bean instance and shares it within the **Spring application context**.
 
 ---
 
@@ -201,7 +201,7 @@ This means Spring creates one bean instance and shares it within the **Spring ap
 
 **No. Singleton beans are not thread-safe by default.**
 
-A singleton bean can be accessed by multiple threads at the same time. So, if the bean contains shared mutable state, we need to handle that carefully using appropriate synchronization or thread-safe data structures. Step-4-Spring-Framework-Level-I…
+A singleton bean can be accessed by multiple threads at the same time. So, if the bean contains shared mutable state, we need to handle that carefully using appropriate synchronization or thread-safe data structures.
 
 ---
 
@@ -209,7 +209,7 @@ A singleton bean can be accessed by multiple threads at the same time. So, if th
 
 Yes, we can have **multiple Spring configuration files**.
 
-This helps us organize bean definitions and configuration based on different modules or responsibilities. These configurations can then be loaded into the application context as required. Step-4-Spring-Framework-Level-I…
+This helps us organize bean definitions and configuration based on different modules or responsibilities. These configurations can then be loaded into the application context as required.
 
 ---
 
@@ -220,7 +220,7 @@ Some examples are:
 - **Singleton Pattern** — Spring's singleton scope allows a single shared bean instance.
 - **Factory Pattern** — Spring is responsible for creating bean instances.
 
-These patterns help Spring manage and create objects efficiently. Step-4-Spring-Framework-Level-I…
+These patterns help Spring manage and create objects efficiently.
 
 ---
 
@@ -228,7 +228,7 @@ These patterns help Spring manage and create objects efficiently. Step-4-Spring-
 
 With **Prototype scope**, Spring creates a **new bean instance every time the bean is requested**.
 
-Unlike Singleton, where the same instance is reused, Prototype gives us a separate instance for each request. This is useful when each operation needs its own object state. Step-4-Spring-Framework-Level-I…
+Unlike Singleton, where the same instance is reused, Prototype gives us a separate instance for each request. This is useful when each operation needs its own object state.
 
 ---
 
@@ -242,7 +242,7 @@ We can activate a profile using:
 spring.profiles.active=dev
 ```
 
-We can also use the `@Profile` annotation to make specific beans available only for a particular profile. Step-4-Spring-Framework-Level-I…
+We can also use the `@Profile` annotation to make specific beans available only for a particular profile.
 
 ---
 
@@ -255,7 +255,7 @@ The main difference is:
 - **Spring MVC** — traditional synchronous, blocking model
 - **Spring WebFlux** — asynchronous, non-blocking, reactive model
 
-WebFlux is useful for applications that need **high concurrency with efficient resource usage**. Step-4-Spring-Framework-Level-I…
+WebFlux is useful for applications that need **high concurrency with efficient resource usage**.
 
 ---
 
@@ -265,7 +265,7 @@ I would mainly consider **team familiarity, project requirements, and configurat
 
 **Annotations** are usually more concise and easier to maintain because the configuration stays close to the code.
 
-**XML** keeps configuration separate from the code and can be useful when we need to change configuration without modifying the source code. Step-4-Spring-Framework-Level-I…
+**XML** keeps configuration separate from the code and can be useful when we need to change configuration without modifying the source code.
 
 ---
 
@@ -276,7 +276,7 @@ I would:
 - Use **Dependency Injection** to manage dependencies.
 - Use **Spring Profiles** for environment-specific configuration.
 - Group related beans into separate **configuration classes**.
-- Use **`@ComponentScan`** to automatically discover beans. Step-4-Spring-Framework-Level-I…
+- Use **`@ComponentScan`** to automatically discover beans.
 
 ---
 
@@ -287,4 +287,4 @@ I would:
 - Use **synchronized methods or blocks** for critical sections.
 - Use **ThreadLocal** when thread-specific data is required.
 - Prefer **stateless beans** where possible, so there is less shared mutable state.
-- Use thread-safe utilities from **`java.util.concurrent`**. Step-4-Spring-Framework-Level-I…
+- Use thread-safe utilities from **`java.util.concurrent`**.
