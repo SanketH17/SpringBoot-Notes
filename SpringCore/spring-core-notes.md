@@ -2,6 +2,40 @@
 
 > Scope: Spring Core concepts most useful for 3–5 YOE Java Backend / Spring Boot interviews. AOP is intentionally excluded.
 
+## Index
+
+### Spring Core Concepts
+
+1. [Mental Model First](#mental-model)
+2. [IoC and Dependency Injection](#ioc-and-dependency-injection)
+3. [Spring IoC Container and `ApplicationContext`](#spring-ioc-container-and-applicationcontext)
+4. [`BeanFactory` vs `ApplicationContext`](#beanfactory-vs-applicationcontext)
+5. [Spring Beans](#spring-beans)
+6. [Component Stereotypes](#component-stereotypes)
+7. [Dependency Injection Styles](#dependency-injection-styles)
+8. [Bean Lifecycle](#bean-lifecycle)
+9. [Bean Scopes: Singleton and Prototype](#bean-scopes)
+10. [`@Configuration` and `@Bean`](#configuration-and-bean)
+11. [`@ComponentScan`](#componentscan)
+12. [Multiple Implementations: `@Primary` and `@Qualifier`](#multiple-implementations)
+13. [Spring Profiles](#spring-profiles)
+14. [`application.properties` and `application.yml`](#application-properties-and-yml)
+15. [Externalized Configuration](#externalized-configuration)
+16. [`@Value`](#value)
+17. [`@ConfigurationProperties`](#configurationproperties)
+18. [Basic Bean Creation and DI Flow](#bean-creation-and-di-flow)
+19. [Spring vs Spring Boot](#spring-vs-spring-boot)
+
+### Quick Revision
+
+- [Top Concepts](#top-concepts)
+- [Top Interview Questions](#top-interview-questions)
+- [Must-Remember Cheat Sheet](#must-remember-cheat-sheet)
+- [30-Second Spring Core Explanation](#30-second-spring-core-explanation)
+
+---
+
+<a id="mental-model"></a>
 ## Mental Model First
 
 ```text
@@ -30,6 +64,7 @@ Controller → Service → Repository → Database
 
 ---
 
+<a id="ioc-and-dependency-injection"></a>
 ## 1. 🔥 IoC and Dependency Injection
 
 ### What is IoC?
@@ -117,6 +152,7 @@ A payment service needs a payment gateway client. In production, inject a real c
 
 ---
 
+<a id="spring-ioc-container-and-applicationcontext"></a>
 ## 2. 🔥 Spring IoC Container and `ApplicationContext`
 
 ### What is it?
@@ -172,6 +208,7 @@ At startup, the context creates a controller, a service, a repository, a datasou
 
 ---
 
+<a id="beanfactory-vs-applicationcontext"></a>
 ## 3. ⭐ `BeanFactory` vs `ApplicationContext`
 
 ### What are they?
@@ -204,6 +241,7 @@ Do not say `BeanFactory` can never create a bean until requested. It supports la
 
 ---
 
+<a id="spring-beans"></a>
 ## 4. 🔥 Spring Beans
 
 ### What is a bean?
@@ -253,6 +291,7 @@ By default, Spring commonly uses the class name with a lowercase first letter, s
 
 ---
 
+<a id="component-stereotypes"></a>
 ## 5. 🔥 Component Stereotypes: `@Component`, `@Service`, `@Repository`, `@Controller`
 
 ### What are they?
@@ -303,6 +342,7 @@ They make architecture easier to read and give some layers special meaning. For 
 
 ---
 
+<a id="dependency-injection-styles"></a>
 ## 6. 🔥 Dependency Injection Styles
 
 ### Constructor injection — preferred
@@ -370,6 +410,7 @@ It is concise, but dependencies are hidden, fields cannot easily be `final`, and
 
 ---
 
+<a id="bean-lifecycle"></a>
 ## 7. 🔥 Bean Lifecycle
 
 ### What is it?
@@ -443,6 +484,7 @@ They provide a clear place for setup that needs injected dependencies, and clean
 
 ---
 
+<a id="bean-scopes"></a>
 ## 8. ⭐ Bean Scopes: Singleton and Prototype
 
 ### What is a bean scope?
@@ -499,6 +541,7 @@ If a prototype bean is constructor-injected into a singleton bean, it is resolve
 
 ---
 
+<a id="configuration-and-bean"></a>
 ## 9. 🔥 `@Configuration` and `@Bean`
 
 ### What are they?
@@ -555,6 +598,7 @@ class HttpClientConfig {
 
 ---
 
+<a id="componentscan"></a>
 ## 10. ⭐ `@ComponentScan`
 
 ### What is it?
@@ -593,6 +637,7 @@ If `StoreApplication` is placed in a narrow subpackage, Spring may not scan sibl
 
 ---
 
+<a id="multiple-implementations"></a>
 ## 11. 🔥 Multiple Implementations: `@Primary` and `@Qualifier`
 
 ### The problem
@@ -659,6 +704,7 @@ Do not use `@Primary` simply to hide a design problem. If a service genuinely ne
 
 ---
 
+<a id="spring-profiles"></a>
 ## 12. 🔥 Spring Profiles
 
 ### What are profiles?
@@ -720,6 +766,7 @@ application-prod.yml   # production overrides
 
 ---
 
+<a id="application-properties-and-yml"></a>
 ## 13. ⭐ `application.properties` and `application.yml`
 
 ### What are they?
@@ -756,6 +803,7 @@ Both work. YAML is often easier to read for nested configuration; `.properties` 
 
 ---
 
+<a id="externalized-configuration"></a>
 ## 14. 🔥 Externalized Configuration
 
 ### What is it?
@@ -807,6 +855,7 @@ This is especially useful because environment variables commonly use uppercase a
 
 ---
 
+<a id="value"></a>
 ## 15. ⭐ `@Value`
 
 ### What is it?
@@ -847,6 +896,7 @@ Use it for one or two simple values. For a related group of settings, prefer `@C
 
 ---
 
+<a id="configurationproperties"></a>
 ## 16. 🔥 `@ConfigurationProperties`
 
 ### What is it?
@@ -931,6 +981,7 @@ This lets the application fail early with a clear message when required configur
 
 ---
 
+<a id="bean-creation-and-di-flow"></a>
 ## 17. 🔥 Basic Bean Creation and DI Flow
 
 Use this flow to explain what happens when a Spring Boot application starts.
@@ -1005,6 +1056,7 @@ Usually this is a design smell. Extract shared work into another service or rede
 
 ---
 
+<a id="spring-vs-spring-boot"></a>
 ## 18. 💡 Spring vs Spring Boot
 
 This is useful context for interviews, even though these notes focus on Spring Core.
@@ -1022,8 +1074,10 @@ This is useful context for interviews, even though these notes focus on Spring C
 
 ---
 
+<a id="quick-interview-revision"></a>
 # Spring Core — Quick Interview Revision
 
+<a id="top-concepts"></a>
 ## Top Concepts
 
 1. **IoC and DI** — Spring creates and wires objects instead of application code doing it everywhere.
@@ -1037,6 +1091,7 @@ This is useful context for interviews, even though these notes focus on Spring C
 9. **Profiles and external configuration** — run the same build safely across environments.
 10. **`@ConfigurationProperties`** — typed, grouped configuration binding.
 
+<a id="top-interview-questions"></a>
 ## Top Interview Questions
 
 - What are IoC and Dependency Injection? How are they different?
@@ -1054,6 +1109,7 @@ This is useful context for interviews, even though these notes focus on Spring C
 - What is externalized configuration?
 - When should you use `@Value` vs `@ConfigurationProperties`?
 
+<a id="must-remember-cheat-sheet"></a>
 ## Must-Remember Cheat Sheet
 
 ```text
@@ -1083,6 +1139,7 @@ Preferred injection     → Constructor injection
 Externalized config     → Environment values outside Java code
 ```
 
+<a id="30-second-spring-core-explanation"></a>
 ## 30-Second Spring Core Explanation
 
 > Spring Core is mainly about IoC and Dependency Injection. Spring's `ApplicationContext` creates and manages beans, resolves their dependencies, and controls their lifecycle. In a typical Spring Boot application, components such as controllers, services, and repositories are discovered by scanning, wired with constructor injection, and configured through external properties and profiles.
