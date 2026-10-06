@@ -430,10 +430,10 @@ The bean lifecycle is the sequence Spring follows to create, configure, initiali
 ```mermaid
 flowchart LR
     A[Instantiate] --> B[Inject dependencies]
-    B --> C[@PostConstruct / init method]
+    B --> C["@PostConstruct / init method"]
     C --> D[Bean ready]
     D --> E[Context shutdown]
-    E --> F[@PreDestroy / destroy method]
+    E --> F["@PreDestroy / destroy method"]
 ```
 
 ### Simple example
